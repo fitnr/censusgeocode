@@ -33,12 +33,13 @@ class CensusGeocode(object):
     def _fetch(self, searchtype, fields, returntype=None):
         fields['vintage'] = self.vintage
         fields['benchmark'] = self.benchmark
+        fields['format'] = 'json'
 
-        url = self._geturl(searchtype, returntype) + '?' + parse.urlencode(fields).encode('utf-8')
+        url = self._geturl(searchtype, returntype) + '?' + parse.urlencode(fields)
 
         try:
-            with request.urlopen(url) as response:
-                return json.loads(response.read())
+            response = request.urlopen(url)
+            return CensusResult(json.loads(response.read().decode('utf-8')))
 
         except HTTPError as e:
             raise e
