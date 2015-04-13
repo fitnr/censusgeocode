@@ -31,9 +31,6 @@ setup(
         'Operating System :: OS Independent',
     ],
     packages=['censusgeocode'],
-    install_requires=[
-        'poster'
-    ],
     test_suite='tests',
     entry_points={
         'console_scripts': [

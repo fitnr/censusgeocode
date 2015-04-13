@@ -7,11 +7,7 @@ Accepts either named `lat` and `lng` or x and y inputs.
 """
 
 from urllib import parse, request
-from io import StringIO
-from itertools import chain
 from urllib.error import URLError, HTTPError
-from poster.encode import multipart_encode
-import csv
 import json
 
 GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2012', 'Census2010']
@@ -73,79 +69,10 @@ class CensusGeocode(object):
         return self._fetch('coordinates', fields, returntype)
 
     def addressbatch(self, data, returntype):
-        '''Send a batch geocoding request.
-        data -- An iterable of iterables containing addresses. Each row should contain:
-            * House Number and Street Name,
-            * City,
-            * State,
-            * ZIP Code
+        raise NotImplementedError
 
-        If a value is missing, the list must contain an empty string or None.
 
-        For example:
-        >>> data = [
-        ...     ['1600 Pennsylvania Avenue', 'Washington', 'DC', '20502'],
-        ...     ['350 Fifth Avenue', 'New York', 'NY', None],
-        ...     ['233 South Wacker Drive', None, None, '60606']
-        ... ]
 
-        Optionally, a unique numeric ID can be given as 0th item in each row.
-        >>> data = [
-        ...     ['101', '400 Broad Street', 'Seattle', 'WA', '98109'],
-        ...     ['102', '298 1st St', 'Darwin', 'MN', '55324'],
-        ... ]
-
-        returntype --- 'geographies' or 'locations'. Default: geographies
-        '''
-
-        # >>> data = urllib.parse.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
-        # >>> data = data.encode('utf-8')
-        # >>>
-        # >>> # adding charset parameter to the Content-Type header.
-        # >>> request.add_header("Content-Type","application/x-www-form-urlencoded;charset=utf-8")
-        # >>> with urllib.request.urlopen(request, data) as f:
-        # ...     print(f.read().decode('utf-8'))
-
-        fields = {
-            'returntype': returntype
-        }
-
-        stringio = StringIO()
-        writer = csv.writer(stringio, delimiter=',')
-
-        data = iter(data)
-        row = list(next(data))
-
-        if len(row) == 4:
-            writer.writerow(list(chain([1], row)))
-            for id_, row in enumerate(data, 2):
-                writer.writerows(list(chain([id_], row)))
-
-        elif len(row) == 5:
-            writer.writerow(row)
-            writer.writerows(data)
-
-        else:
-            raise ValueError("Rows must contain four or five items.")
-
-        # stringio now contains a CSV
-        fields['addressFile'] = stringio
-
-        data, headers = multipart_encode(fields)
-
-        url = self._geturl('addressbatch', returntype)
-
-        req = request.Request(url, fields, headers)
-
-        try:
-            with request.urlopen(req) as response:
-                return response.read()
-
-        except HTTPError as e:
-            raise e
-
-        except URLError as e:
-            raise e
 
 
 class CensusResult(object):
