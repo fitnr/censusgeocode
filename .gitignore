@@ -28,6 +28,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+.eggs
 
 # Installer logs
 pip-log.txt
@@ -58,3 +59,5 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+readme.rst

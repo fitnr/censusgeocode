@@ -15,6 +15,8 @@ BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
 
 
 class CensusGeocode(object):
+    '''Fetch results from the Census Geocoder'''
+    # pylint: disable=R0921
 
     _url = "http://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
@@ -53,6 +55,7 @@ class CensusGeocode(object):
             raise e
 
     def coordinates(self, x, y, returntype=None):
+        '''Geocode a (lon, lat) coordinate.'''
         fields = {
             'x': x,
             'y': y
@@ -60,6 +63,7 @@ class CensusGeocode(object):
         return self._fetch('coordinates', fields, returntype)
 
     def address(self, street, city=None, state=None, zipcode=None, returntype=None):
+        '''Geocode an address.'''
         fields = {
             'street': street,
             'city': city,
@@ -69,6 +73,10 @@ class CensusGeocode(object):
         return self._fetch('coordinates', fields, returntype)
 
     def onelineaddress(self, address, returntype=None):
+        '''Geocode an an address passed as one string.
+        e.g. "4600 Silver Hill Rd, Suitland, MD 20746"
+        '''
+
         fields = {
             'address': address,
         }
@@ -78,11 +86,14 @@ class CensusGeocode(object):
         raise NotImplementedError
 
 
-
-
-
 class CensusResult(object):
-    """docstring for CensusResult"""
+
+    # pylint: disable=R0903
+
+    geographies = None
+    input = None
+    addressMatches = None
+
     def __init__(self, data):
         for key, value in data['result'].items():
             setattr(self, key, value)
