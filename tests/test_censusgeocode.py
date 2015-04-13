@@ -9,7 +9,23 @@
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
 import unittest
-import censusgeocode
+from censusgeocode import CensusGeocode
+from censusgeocode.censusgeocode import CensusResult
+
 
 class CensusGeoCodeTestCase(unittest.TestCase):
-    pass
+
+    cg = None
+
+    def setUp(self):
+        self.cg = CensusGeocode(benchmark='Public_AR_ACS2014', geovintage='ACS2013')
+
+    def test_returns(self):
+        results = self.cg.coordinates(-74, 43)
+        assert isinstance(results, CensusResult)
+
+    def test_coords(self):
+        results = self.cg.coordinates(-74, 43)
+        assert results.geographies['Counties'][0]['BASENAME'] == 'Saratoga'
+        assert results.geographies['Counties'][0]['GEOID'] == '36091'
+        assert results.geographies['Census Tracts'][0]['BASENAME'] == "615"
