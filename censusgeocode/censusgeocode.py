@@ -10,7 +10,7 @@ from urllib import parse, request
 from urllib.error import URLError, HTTPError
 import json
 
-GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2012', 'Census2010']
+GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2013', 'ACS2012', 'Census2010', 'Census2000']
 BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
 
 
@@ -19,12 +19,17 @@ class CensusGeocode(object):
     _url = "http://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
 
-    def __init__(self, benchmark=None, geographyvintage=None):
+    def __init__(self, benchmark=None, geovintage=None):
+        '''
+        benchmark -- A name that references the version of the locator to use. See http://geocoding.geo.census.gov/geocoder/benchmarks
+        geovintage -- The geography part of the desired vintage. For instance, for the vintage 'ACS2014_Current':
+        >>> CensusGeocode(benchmark='Current', geovintage='ACS_2014')
+        See http://geocoding.geo.census.gov/geocoder/vintages?form
+        '''
         self.benchmark = benchmark or BENCHMARKS[0]
-        geographyvintage = geographyvintage or GEOGRAPHYVINTAGES[0]
+        geographyvintage = geovintage or GEOGRAPHYVINTAGES[0]
 
-        self.vintage = geographyvintage + \
-            self.benchmark.replace('Public_AR', '')
+        self.vintage = geographyvintage + self.benchmark.replace('Public_AR', '')
 
     def _geturl(self, searchtype, returntype=None):
         returntype = returntype or self.returntypes[0]
