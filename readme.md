@@ -1,9 +1,9 @@
 Census Geocode
 --------------
 
-Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/).
+Python 2 and 3 wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/).
 
-Basic example
+Basic example:
 
 ```python
 from censusgeocode import CensusGeocode
@@ -20,11 +20,16 @@ Use the returntype keyword to specify 'locations' or 'geographies'. Geographies 
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC', returntype='locations')
 ```
 
-Queries return a CensusResult object, which closely matches the raw result.
+Queries return a CensusResult object, which is basically a Python list with an extra 'input' property, which the Census returns to tell you how they interpreted your request.
+
 ```python
-result = cg.coordinates(x=-76, y=41)
-result.geographies
-{
+>>> result = cg.coordinates(x=-76, y=41)
+
+>>> result.input
+{u'vintage': {u'vintageName': u'Current_Current', u'id': u'4', u'vintageDescription': u'Current Vintage - Current Benchmark', u'isDefault': True}, u'benchmark': {u'benchmarkName': u'Public_AR_Current', u'id': u'4', u'isDefault': False, u'benchmarkDescription': u'Public Address Ranges - Current Benchmark'}, u'location': {u'y': 41.0, u'x': -76.0}}
+
+>>> result
+[{
     '2010 Census Blocks': [{
         'AREALAND': 1409023,
         'AREAWATER': 0,
@@ -108,5 +113,5 @@ result.geographies
         'STATENS': '01779798',
         'STUSAB': 'PA'
     }]
-}
+}]
 ```
