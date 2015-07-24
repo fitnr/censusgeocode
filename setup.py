@@ -27,7 +27,7 @@ except IOError:
 
 setup(
     name='censusgeocode',
-    version='0.1.0',
+    version='0.2.0',
     description='Thin Python wrapper for the US Census Geocoder',
     long_description=readme,
     keywords='census geocode api',
