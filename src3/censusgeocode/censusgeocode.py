@@ -37,10 +37,15 @@ class CensusGeocode(object):
         returntype = returntype or self.returntypes[0]
         return self._url.format(returntype=returntype, searchtype=searchtype)
 
-    def _fetch(self, searchtype, fields, returntype=None):
+    def _fetch(self, searchtype, fields, layers=None, returntype=None):
         fields['vintage'] = self.vintage
         fields['benchmark'] = self.benchmark
         fields['format'] = 'json'
+
+        if layers:
+            fields['layers'] = layers
+
+        returntype = returntype or 'geographies'
 
         url = self._geturl(searchtype, returntype) + '?' + parse.urlencode(fields)
 
@@ -54,15 +59,16 @@ class CensusGeocode(object):
         except URLError as e:
             raise e
 
-    def coordinates(self, x, y, returntype=None):
+    def coordinates(self, x, y, layers=None, returntype=None):
         '''Geocode a (lon, lat) coordinate.'''
         fields = {
             'x': x,
             'y': y
         }
-        return self._fetch('coordinates', fields, returntype)
 
-    def address(self, street, city=None, state=None, zipcode=None, returntype=None):
+        return self._fetch('coordinates', fields, layers, returntype)
+
+    def address(self, street, city=None, state=None, zipcode=None, layers=None, returntype=None):
         '''Geocode an address.'''
         fields = {
             'street': street,
@@ -70,9 +76,10 @@ class CensusGeocode(object):
             'state': state,
             'zip': zipcode,
         }
-        return self._fetch('coordinates', fields, returntype)
 
-    def onelineaddress(self, address, returntype=None):
+        return self._fetch('address', fields, layers, returntype)
+
+    def onelineaddress(self, address, layers=None, returntype=None):
         '''Geocode an an address passed as one string.
         e.g. "4600 Silver Hill Rd, Suitland, MD 20746"
         '''
@@ -80,20 +87,21 @@ class CensusGeocode(object):
         fields = {
             'address': address,
         }
-        return self._fetch('coordinates', fields, returntype)
 
-    def addressbatch(self, data, returntype):
+        return self._fetch('onelineaddress', fields, layers, returntype)
+
+    def addressbatch(self, data, returntype=None):
         raise NotImplementedError
 
 
-class CensusResult(object):
-
-    # pylint: disable=R0903
-
-    geographies = None
-    input = None
-    addressMatches = None
+class CensusResult(list):
 
     def __init__(self, data):
-        for key, value in data['result'].items():
-            setattr(self, key, value)
+        self.input = data['result']['input']
+
+        try:
+            super(CensusResult, self).__init__(data['result']['addressMatches'])
+
+        except KeyError:
+            super(CensusResult, self).__init__([data['result']['geographies']])
+
