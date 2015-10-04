@@ -13,21 +13,20 @@ from setuptools import setup
 
 if sys.version_info < (3,):
     package_dir = 'src2'
-    requires = ['requests>=2.7,<2.8']
-    print('2')
+    requires = ['requests>=2.7,<3']
+
 else:
     package_dir = 'src3'
     requires = []
-    print('3')
 
 try:
-    readme = open('readme.rst').read()
+    readme = open('README.rst').read()
 except IOError:
-    readme = ''
+    readme = open('README.md').read()
 
 setup(
     name='censusgeocode',
-    version='0.2.0',
+    version='0.2.1',
     description='Thin Python wrapper for the US Census Geocoder',
     long_description=readme,
     keywords='census geocode api',

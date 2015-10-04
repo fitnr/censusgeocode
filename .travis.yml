@@ -8,12 +8,17 @@
 language: python
 
 python:
-    - "3.2"
-    - "3.3"
-    - "3.4"
+    - 2.7
+    - 3.3
+    - 3.4
+    - 3.5
 
 install:
+    - pip install coverage
     - make install
 
 script:
-    - python setup.py test
+    - coverage run --include='src*/censusgeocode/*' setup.py test
+
+after_success:
+    - coverage report
