@@ -52,7 +52,7 @@ setup(
     test_suite='tests',
     entry_points={
         'console_scripts': [
-            # 'censusgeocode=censusgeocode.cli:main',
+            'censusgeocode=censusgeocode.cli:main',
         ],
     },
 )
