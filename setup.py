@@ -22,11 +22,14 @@ else:
 try:
     readme = open('README.rst').read()
 except IOError:
-    readme = open('README.md').read()
+    try:
+        readme = open('README.md').read()
+    except IOError:
+        readme = ''
 
 setup(
     name='censusgeocode',
-    version='0.2.1',
+    version='0.2.2',
     description='Thin Python wrapper for the US Census Geocoder',
     long_description=readme,
     keywords='census geocode api',
