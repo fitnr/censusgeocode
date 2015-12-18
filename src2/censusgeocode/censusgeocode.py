@@ -65,16 +65,16 @@ class CensusGeocode(object):
 
         return CensusResult(response)
 
-    def coordinates(self, x, y, layers=None, returntype=None):
+    def coordinates(self, x, y, **kwargs):
         '''Geocode a (lon, lat) coordinate.'''
         fields = {
             'x': x,
             'y': y
         }
 
-        return self._fetch('coordinates', fields, layers, returntype)
+        return self._fetch('coordinates', fields, **kwargs)
 
-    def address(self, street, city=None, state=None, zipcode=None, layers=None, returntype=None):
+    def address(self, street, city=None, state=None, zipcode=None, **kwargs):
         '''Geocode an address.'''
         fields = {
             'street': street,
@@ -83,9 +83,9 @@ class CensusGeocode(object):
             'zip': zipcode,
         }
 
-        return self._fetch('address', fields, layers, returntype)
+        return self._fetch('address', fields, **kwargs)
 
-    def onelineaddress(self, address, layers=None, returntype=None):
+    def onelineaddress(self, address, **kwargs):
         '''Geocode an an address passed as one string.
         e.g. "4600 Silver Hill Rd, Suitland, MD 20746"
         '''
@@ -94,7 +94,7 @@ class CensusGeocode(object):
             'address': address,
         }
 
-        return self._fetch('onelineaddress', fields, layers, returntype)
+        return self._fetch('onelineaddress', fields, **kwargs)
 
     def addressbatch(self, data, returntype=None):
         raise NotImplementedError
