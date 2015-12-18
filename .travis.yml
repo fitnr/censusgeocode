@@ -13,9 +13,11 @@ python:
     - 3.4
     - 3.5
 
-install:
+before_install:
     - pip install coverage
-    - make install
+
+install:
+    - python setup.py install
 
 script:
     - coverage run --include='src*/censusgeocode/*' setup.py test
