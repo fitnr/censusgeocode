@@ -26,7 +26,24 @@ Queries return a CensusResult object, which is basically a Python list with an e
 >>> result = cg.coordinates(x=-76, y=41)
 
 >>> result.input
-{u'vintage': {u'vintageName': u'Current_Current', u'id': u'4', u'vintageDescription': u'Current Vintage - Current Benchmark', u'isDefault': True}, u'benchmark': {u'benchmarkName': u'Public_AR_Current', u'id': u'4', u'isDefault': False, u'benchmarkDescription': u'Public Address Ranges - Current Benchmark'}, u'location': {u'y': 41.0, u'x': -76.0}}
+{
+    u'vintage': {
+        u'vintageName': u'Current_Current',
+        u'id': u'4',
+        u'vintageDescription': u'Current Vintage - Current Benchmark',
+        u'isDefault': True
+    },
+    u'benchmark': {
+        u'benchmarkName': u'Public_AR_Current',
+        u'id': u'4',
+        u'isDefault': False,
+        u'benchmarkDescription': u'Public Address Ranges - Current Benchmark'
+    },
+    u'location': {
+        u'y': 41.0,
+        u'x': -76.0
+    }
+}
 
 >>> result
 [{

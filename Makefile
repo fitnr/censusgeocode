@@ -11,6 +11,7 @@ install: README.rst
 
 README.rst: README.md
 	pandoc $< -o $@ || touch $@
+	python setup.py check --restructuredtext --strict
 
 upload:
 	rm -rf dist
