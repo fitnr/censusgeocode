@@ -28,7 +28,6 @@ BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
 class CensusGeocode(object):
 
     '''Fetch results from the Census Geocoder'''
-    # pylint: disable=R0921
 
     _url = "http://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
@@ -61,9 +60,12 @@ class CensusGeocode(object):
 
         url = self._geturl(searchtype, returntype)
 
-        response = requests.get(url, params=fields).json()
+        try:
+            response = requests.get(url, params=fields).json()
+            return CensusResult(response)
 
-        return CensusResult(response)
+        except (ValueError, KeyError):
+            raise ValueError('Unable to read response from the Census')
 
     def coordinates(self, x, y, **kwargs):
         '''Geocode a (lon, lat) coordinate.'''

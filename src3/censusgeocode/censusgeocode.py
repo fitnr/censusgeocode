@@ -68,6 +68,9 @@ class CensusGeocode(object):
             response = request.urlopen(url)
             return CensusResult(json.loads(response.read().decode('utf-8')))
 
+        except (ValueError, KeyError):
+            raise ValueError('Unable to read response from the Census')
+
         except HTTPError as e:
             raise e
 
