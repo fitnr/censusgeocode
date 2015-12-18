@@ -3,6 +3,8 @@ Census Geocode
 
 Python 2 and 3 wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/). It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude.
 
+Census Geocode is very lightweight - it has no prerequisites in Python 3, and relies only on [requests](http://docs.python-requests.org/en/latest/) in Python 2.
+
 Basic example:
 
 ```python
@@ -15,7 +17,7 @@ cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC')
 cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zipcode='22052')
 ```
 
-Use the returntype keyword to specify 'locations' or 'geographies'. Geographies is the default.
+Use the returntype keyword to specify 'locations' or 'geographies'. 'Locations' yields structured information about the address, and 'geographies' yields information about the Census geographies. Geographies is the default.
 ```python
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC', returntype='locations')
 ```
