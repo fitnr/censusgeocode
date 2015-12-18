@@ -10,11 +10,14 @@ install: README.rst
 	python setup.py install
 
 README.rst: README.md
-	pandoc $< -o $@ || touch $@
+	- pandoc $< -o $@
+	@touch $@
 	python setup.py check --restructuredtext --strict
 
-upload:
-	rm -rf dist
+deploy: README.rst
+	rm -rf dist build
+	python setup.py register
 	python setup.py bdist_wheel
+	rm -rf dist build
 	python3 setup.py bdist_wheel
 	twine upload dist/*
