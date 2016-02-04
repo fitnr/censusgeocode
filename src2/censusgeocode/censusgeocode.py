@@ -24,7 +24,6 @@ import requests
 GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2013', 'ACS2012', 'Census2010', 'Census2000']
 BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
 
-
 class CensusGeocode(object):
 
     '''Fetch results from the Census Geocoder'''

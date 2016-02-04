@@ -46,7 +46,11 @@ class CensusGeoCodeTestCase(unittest.TestCase):
     def test_onelineaddress(self):
         results = self.cg.onelineaddress('1600 Pennsylvania Avenue NW, Washington, DC, 20500', layers='all')
         assert results[0]
-        assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
+        try:
+            assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
+        except AssertionError:
+            print(results[0]['geographies']['Counties'][0])
+            raise
 
         assert 'Metropolitan Divisions' in results[0]['geographies'].keys()
         assert 'Alaska Native Village Statistical Areas' in results[0]['geographies'].keys()
