@@ -111,5 +111,5 @@ class CensusResult(list):
             super(CensusResult, self).__init__(data['result']['addressMatches'])
 
         except KeyError:
-            super(CensusResult, self).__init__([data['result']['geographies']])
+            super(CensusResult, self).__init__([data.get('result', {}).get('geographies', {})])
 
