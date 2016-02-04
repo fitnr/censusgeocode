@@ -61,11 +61,12 @@ class CensusGeocode(object):
         url = self._geturl(searchtype, returntype)
 
         try:
-            response = requests.get(url, params=fields).json()
+            r = requests.get(url, params=fields)
+            response = r.json()
             return CensusResult(response)
 
         except (ValueError, KeyError):
-            raise ValueError('Unable to read response from the Census')
+            raise ValueError('Unable to read response from the Census: {}'.format(r.url))
 
     def coordinates(self, x, y, **kwargs):
         '''Geocode a (lon, lat) coordinate.'''

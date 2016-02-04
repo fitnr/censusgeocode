@@ -18,20 +18,25 @@ class CensusGeoCodeTestCase(unittest.TestCase):
     cg = None
 
     def setUp(self):
-        self.cg = CensusGeocode(benchmark='Public_AR_ACS2014', geovintage='ACS2013')
-
-        self.results = self.cg.coordinates(-74, 43)
+        self.cg = CensusGeocode()
 
     def test_returns(self):
-        assert isinstance(self.results, CensusResult)
+        results = self.cg.coordinates(-74, 43)
+        assert isinstance(results, CensusResult)
 
     def test_input(self):
-        assert self.results.input
+        results = self.cg.coordinates(-73, 43)
+        assert results.input
 
     def test_coords(self):
-        assert self.results[0]['Counties'][0]['BASENAME'] == 'Saratoga'
-        assert self.results[0]['Counties'][0]['GEOID'] == '36091'
-        assert self.results[0]['Census Tracts'][0]['BASENAME'] == "615"
+        results = self.cg.coordinates(-74, 43)
+        assert results[0]['Counties'][0]['BASENAME'] == 'Saratoga'
+        assert results[0]['Counties'][0]['GEOID'] == '36091'
+        assert results[0]['Census Tracts'][0]['BASENAME'] == "615"
+
+    def test_url(self):
+        r = self.cg._geturl('coordinates', 'geographies')
+        assert r == 'http://geocoding.geo.census.gov/geocoder/geographies/coordinates'
 
     def test_address(self):
         results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500')
