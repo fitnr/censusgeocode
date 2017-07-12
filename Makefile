@@ -12,12 +12,12 @@ install: README.rst
 README.rst: README.md
 	- pandoc $< -o $@
 	@touch $@
-	python setup.py check --restructuredtext --strict
+	- python setup.py check --restructuredtext --strict
 
 test: ; python setup.py test
 
 deploy: README.rst | clean
-	python setup.py register
+	twine register
 	python setup.py sdist
 	python3 setup.py bdist_wheel
 	twine upload dist/*
