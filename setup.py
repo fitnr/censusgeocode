@@ -8,16 +8,7 @@
 # http://opensource.org/licenses/LGPL-3.0
 # Copyright (c) 2015, Neil Freeman <contact@fakeisthenewreal.org>
 
-import sys
 from setuptools import setup
-
-if sys.version_info < (3,):
-    package_dir = 'src2'
-    requires = ['requests>=2.7,<3']
-
-else:
-    package_dir = 'src3'
-    requires = []
 
 try:
     readme = open('README.rst').read()
@@ -48,8 +39,9 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Operating System :: OS Independent',
     ],
-    package_dir={'': package_dir},
-    install_requires=requires,
+    install_requires=[
+        'requests[security]>=2.7,<3'
+    ],
     packages=['censusgeocode'],
     test_suite='tests',
     entry_points={

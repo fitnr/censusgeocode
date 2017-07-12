@@ -36,7 +36,7 @@ class CensusGeoCodeTestCase(unittest.TestCase):
 
     def test_url(self):
         r = self.cg._geturl('coordinates', 'geographies')
-        assert r == 'http://geocoding.geo.census.gov/geocoder/geographies/coordinates'
+        assert r == 'https://geocoding.geo.census.gov/geocoder/geographies/coordinates'
 
     def test_address(self):
         results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500')

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2
+#!/usr/local/bin/python3
 
 # Copyright (C) 2015 Neil Freeman
 
@@ -18,17 +18,21 @@
 """
 Census Geocoder wrapper
 see http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
+Accepts either named `lat` and `lng` or x and y inputs.
 """
+
 import requests
+from requests.exceptions import RequestException
 
 GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2013', 'ACS2012', 'Census2010', 'Census2000']
 BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
 
+
 class CensusGeocode(object):
-
     '''Fetch results from the Census Geocoder'''
+    # pylint: disable=R0921
 
-    _url = "http://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
+    _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
 
     def __init__(self, benchmark=None, geovintage=None):
@@ -60,12 +64,14 @@ class CensusGeocode(object):
         url = self._geturl(searchtype, returntype)
 
         try:
-            r = requests.get(url, params=fields)
-            response = r.json()
-            return CensusResult(response)
+            response = requests.get(url, params=fields)
+            return CensusResult(response.json())
 
         except (ValueError, KeyError):
-            raise ValueError('Unable to read response from the Census: {}'.format(r.url))
+            raise ValueError('Unable to read response from the Census')
+
+        except RequestException as e:
+            raise e
 
     def coordinates(self, x, y, **kwargs):
         '''Geocode a (lon, lat) coordinate.'''
@@ -111,5 +117,5 @@ class CensusResult(list):
             super(CensusResult, self).__init__(data['result']['addressMatches'])
 
         except KeyError:
-            super(CensusResult, self).__init__([data.get('result', {}).get('geographies', {})])
+            super(CensusResult, self).__init__([data['result']['geographies']])
 
