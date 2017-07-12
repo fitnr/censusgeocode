@@ -1,3 +1,11 @@
+0.3.0
+-----
+
+* Better error reporting when API is down.
+* Use `requests[security]` to fix SSL 3 errors, bump required `requests` version.
+* Combine Py 2 and Py 3 codebases.
+* Add timeout parameter to `CensusGeocode.fetch` (thanks @mxr)
+
 0.2.3
 -----
 
