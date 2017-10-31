@@ -39,7 +39,7 @@ setup(
         'Operating System :: OS Independent',
     ],
     install_requires=[
-        'requests[security]>=2.7,<3'
+        'requests[security]>=2.18,<3'
     ],
     packages=['censusgeocode'],
     test_suite='tests',

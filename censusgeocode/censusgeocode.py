@@ -64,8 +64,8 @@ class CensusGeocode(object):
         url = self._geturl(searchtype, returntype)
 
         try:
-            response = requests.get(url, params=fields, timeout=timeout)
-            return CensusResult(response.json())
+            with requests.get(url, params=fields, timeout=timeout) as r:
+                return CensusResult(r.json())
 
         except (ValueError, KeyError):
             raise ValueError('Unable to read response from the Census')
