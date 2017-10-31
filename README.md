@@ -1,9 +1,9 @@
 Census Geocode
 --------------
 
-Python 2 and 3 wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/). It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude.
+Census Geocode is a Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with both Python 2 and 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude.
 
-Census Geocode is very lightweight - it has no prerequisites in Python 3, and relies only on [requests](http://docs.python-requests.org/en/latest/) in Python 2.
+Census Geocode is very lightweight, and relies only on [requests](http://docs.python-requests.org/en/latest/).
 
 Basic example:
 
@@ -26,7 +26,6 @@ Queries return a CensusResult object, which is basically a Python list with an e
 
 ```python
 >>> result = cg.coordinates(x=-76, y=41)
-
 >>> result.input
 {
     u'vintage': {
@@ -46,7 +45,6 @@ Queries return a CensusResult object, which is basically a Python list with an e
         u'x': -76.0
     }
 }
-
 >>> result
 [{
     '2010 Census Blocks': [{
@@ -138,7 +136,7 @@ Queries return a CensusResult object, which is basically a Python list with an e
 ## Command line tool
 
 The `censusgeocode` tool is bare bones. It takes one argument, an address, and returns a comma-delimited longitude, latitude pair.
-````
+````bash
 censusgeocode '100 Fifth Avenue, New York, NY'
 -73.992195, 40.73797
 
@@ -147,7 +145,7 @@ censusgeocode '1600 Pennsylvania Avenue, Washington DC'
 ````
 
 The Census geocoder is reasonably good at recognizing non-standard addresses.
-````
+````bash
 censusgeocode 'Hollywood & Vine, LA, CA'
 -118.32668, 34.101624
 ````
