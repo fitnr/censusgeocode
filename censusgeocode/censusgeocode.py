@@ -51,7 +51,7 @@ class CensusGeocode(object):
         returntype = returntype or self.returntypes[0]
         return self._url.format(returntype=returntype, searchtype=searchtype)
 
-    def _fetch(self, searchtype, fields, layers=None, returntype=None):
+    def _fetch(self, searchtype, fields, layers=None, returntype=None, timeout=None):
         fields['vintage'] = self.vintage
         fields['benchmark'] = self.benchmark
         fields['format'] = 'json'
@@ -64,7 +64,7 @@ class CensusGeocode(object):
         url = self._geturl(searchtype, returntype)
 
         try:
-            response = requests.get(url, params=fields)
+            response = requests.get(url, params=fields, timeout=timeout)
             return CensusResult(response.json())
 
         except (ValueError, KeyError):
