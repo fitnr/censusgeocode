@@ -21,6 +21,7 @@ install:
 
 script:
     - coverage run --source=censusgeocode setup.py test
+    - censusgeocode --version
 
 after_success:
     - coverage report
