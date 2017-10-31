@@ -17,9 +17,7 @@ README.rst: README.md
 test: ; python setup.py test
 
 deploy: README.rst | clean
-	twine register
-	python setup.py sdist
-	python3 setup.py bdist_wheel
+	python3 setup.py sdist bdist_wheel
 	twine upload dist/*
 
 clean:; rm -rf dist build
