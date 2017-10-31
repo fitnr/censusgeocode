@@ -11,12 +11,10 @@
 from setuptools import setup
 
 try:
-    readme = open('README.rst').read()
+    with open('README.md') as f:
+        readme = f.read()
 except IOError:
-    try:
-        readme = open('README.md').read()
-    except IOError:
-        readme = ''
+    readme = ''
 
 setup(
     name='censusgeocode',
