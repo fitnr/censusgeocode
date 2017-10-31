@@ -15,7 +15,7 @@ python:
     - 3.6
 
 before_install:
-    - pip install coverage
+    - pip install --upgrade coverage setuptools
 
 install:
     - python setup.py install
