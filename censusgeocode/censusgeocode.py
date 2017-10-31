@@ -65,10 +65,18 @@ class CensusGeocode(object):
 
         try:
             with requests.get(url, params=fields, timeout=timeout) as r:
-                return CensusResult(r.json())
+                content = r.json()
+                if "addressMatches" in content.get('result', {}):
+                    return AddressResult(content)
+
+                elif "geographies" in content.get('result', {}):
+                    return GeographyResult(content)
+
+                else:
+                    raise ValueError()
 
         except (ValueError, KeyError):
-            raise ValueError('Unable to read response from the Census')
+            raise ValueError("Unable to parse response from Census")
 
         except RequestException as e:
             raise e
@@ -108,14 +116,30 @@ class CensusGeocode(object):
         raise NotImplementedError
 
 
-class CensusResult(list):
+
+class GeographyResult(dict):
+
+    _coordkeys = ('CENTLON', 'CENTLAT', 'INTPTLON', 'INTPTLAT')
 
     def __init__(self, data):
-        self.input = data['result']['input']
+        self.input = data['result'].get('input', {})
+        super(GeographyResult, self).__init__(data['result']['geographies'])
 
-        try:
-            super(CensusResult, self).__init__(data['result']['addressMatches'])
+        # create float coordinate tuples
+        for geolist in self.values():
+            for geo in geolist:
+                try:
+                    geo['CENT'] = float(geo['CENTLON']), float(geo['CENTLAT'])
+                except ValueError:
+                    geo['CENT'] = ()
 
-        except KeyError:
-            super(CensusResult, self).__init__([data['result']['geographies']])
+                try:
+                    geo['INTPT'] = float(geo['INTPTLON']), float(geo['INTPTLAT'])
+                except ValueError:
+                    geo['INTPT'] = ()
 
+class AddressResult(list):
+
+    def __init__(self, data):
+        self.input = data['result'].get('input', {})
+        super(AddressResult, self).__init__(data['result']['addressMatches'])
