@@ -41,6 +41,9 @@ setup(
     install_requires=[
         'requests[security]>=2.18,<3'
     ],
+    tests_require=[
+        'vcrpy>=1.11.1, <1.12'
+    ],
     packages=['censusgeocode'],
     test_suite='tests',
     entry_points={

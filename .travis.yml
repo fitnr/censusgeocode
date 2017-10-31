@@ -14,13 +14,13 @@ python:
     - 3.6
 
 before_install:
-    - pip install coverage
+    - pip install coverage vcrpy
 
 install:
     - python setup.py install
 
 script:
-    - coverage run --include='censusgeocode/*' setup.py test
+    - coverage run --source=censusgeocode setup.py test
 
 after_success:
     - coverage report

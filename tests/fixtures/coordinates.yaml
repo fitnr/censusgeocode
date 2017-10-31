@@ -1,0 +1,33 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/coordinates?y=43&x=-74&format=json&benchmark=Public_AR_Current&vintage=Current_Current
+  response:
+    body: {string: !!python/unicode '{"result":{"input":{"location":{"x":-74.0,"y":43.0},"benchmark":{"benchmarkDescription":"Public
+        Address Ranges - Current Benchmark","isDefault":false,"benchmarkName":"Public_AR_Current","id":"4"},"vintage":{"vintageDescription":"Current
+        Vintage - Current Benchmark","isDefault":true,"vintageName":"Current_Current","id":"4"}},"geographies":{"Counties":[{"OID":27590724407683,"STATE":"36","FUNCSTAT":"A","AREAWATER":87571838,"NAME":"Saratoga
+        County","LSADC":"06","CENTLON":"-073.8636885","BASENAME":"Saratoga","INTPTLAT":"+43.1061353","COUNTYCC":"H1","MTFCC":"G4020","COUNTY":"091","GEOID":"36091","CENTLAT":"+43.1071327","INTPTLON":"-073.8553872","AREALAND":2097880370,"COUNTYNS":"00974143","OBJECTID":167}],"Census
+        Tracts":[{"OID":20790725018479,"STATE":"36","FUNCSTAT":"S","NAME":"Census
+        Tract 615","AREAWATER":3056729,"LSADC":"CT","CENTLON":"-074.0308806","BASENAME":"615","INTPTLAT":"+43.0321923","MTFCC":"G5020","COUNTY":"091","GEOID":"36091061500","CENTLAT":"+43.0293385","INTPTLON":"-074.0320790","AREALAND":113504704,"OBJECTID":6756,"TRACT":"061500"}],"2010
+        Census Blocks":[{"BLKGRP":"2","OID":210403977442765,"FUNCSTAT":"S","STATE":"36","AREAWATER":43363,"NAME":"Block
+        2076","SUFFIX":"","LSADC":"BK","CENTLON":"-073.9972945","LWBLKTYP":"B","BASENAME":"2076","BLOCK":"2076","INTPTLAT":"+43.0050138","MTFCC":"G5040","COUNTY":"091","GEOID":"360910615002076","CENTLAT":"+43.0049410","INTPTLON":"-073.9972405","AREALAND":2071885,"OBJECTID":8494926,"TRACT":"061500"}],"States":[{"OID":27490100833860,"STATE":"36","FUNCSTAT":"A","NAME":"New
+        York","AREAWATER":19247151848,"LSADC":"00","CENTLON":"-075.5942811","STUSAB":"NY","BASENAME":"New
+        York","INTPTLAT":"+42.9133974","DIVISION":"2","MTFCC":"G4000","STATENS":"01779796","GEOID":"36","CENTLAT":"+42.9197932","INTPTLON":"-075.5962723","REGION":"1","AREALAND":122048992746,"OBJECTID":39}]}}}'}
+    headers:
+      cache-control: [private, 'no-cache, no-store, max-age=0']
+      content-language: [en-US]
+      content-type: [application/json]
+      date: ['Tue, 31 Oct 2017 17:33:56 GMT']
+      expires: ['Wed, 31 Dec 1969 23:59:59 GMT']
+      pragma: [no-cache]
+      strict-transport-security: [max-age=31536000]
+      vary: [Origin]
+      x-frame-options: [Deny]
+    status: {code: 200, message: OK}
+version: 1

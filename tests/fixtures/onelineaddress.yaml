@@ -1,0 +1,97 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.12.4]
+    method: GET
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?layers=all&vintage=Current_Current&format=json&benchmark=Public_AR_Current&address=1600+Pennsylvania+Avenue+NW%2C+Washington%2C+DC%2C+20500
+  response:
+    body: {string: !!python/unicode '{"result":{"input":{"address":{"address":"1600
+        Pennsylvania Avenue NW, Washington, DC, 20500"},"benchmark":{"benchmarkDescription":"Public
+        Address Ranges - Current Benchmark","isDefault":false,"benchmarkName":"Public_AR_Current","id":"4"},"vintage":{"vintageDescription":"Current
+        Vintage - Current Benchmark","isDefault":true,"vintageName":"Current_Current","id":"4"}},"addressMatches":[{"tigerLine":{"tigerLineId":"76225813","side":"L"},"geographies":{"Oklahoma
+        Tribal Statistical Areas":[],"2010 Census Urbanized Areas":[{"UA":"92242","OID":27040158105937,"MTFCC":"G3500","FUNCSTAT":"S","AREAWATER":69323392,"NAME":"Washington,
+        DC--VA--MD Urbanized Area","LSADC":"75","CENTLON":"-077.1895657","GEOID":"92242","CENTLAT":"+38.8969178","INTPTLON":"-077.1897402","AREALAND":3424072912,"BASENAME":"Washington,
+        DC--VA--MD","INTPTLAT":"+38.8973945","OBJECTID":3036}],"Combined Statistical
+        Areas":[{"OID":261904755925754,"FUNCSTAT":"S","NAME":"Washington-Baltimore-Arlington,
+        DC-MD-VA-WV-PA CSA","AREAWATER":5208979324,"LSADC":"M0","CENTLON":"-077.1891619","BASENAME":"Washington-Baltimore-Arlington,
+        DC-MD-VA-WV-PA","INTPTLAT":"+38.9943635","MTFCC":"G3100","CSA":"548","GEOID":"548","CENTLAT":"+38.9929959","INTPTLON":"-077.1890457","AREALAND":32712037570,"OBJECTID":45}],"Census
+        Block Groups":[{"BLKGRP":"1","OID":20890331002852,"STATE":"11","FUNCSTAT":"S","AREAWATER":4970897,"NAME":"Block
+        Group 1","LSADC":"BG","CENTLON":"-077.0352173","BASENAME":"1","INTPTLAT":"+38.8809933","MTFCC":"G5030","COUNTY":"001","GEOID":"110010062021","CENTLAT":"+38.8801546","INTPTLON":"-077.0363219","AREALAND":6539774,"OBJECTID":7630,"TRACT":"006202"}],"Elementary
+        School Districts":[],"Metropolitan Divisions":[{"OID":263904755925788,"MTFCC":"G3120","FUNCSTAT":"S","AREAWATER":1070684553,"NAME":"Washington-Arlington-Alexandria,
+        DC-VA-MD-WV Metro Division","CBSA":"47900","CSA":"548","LSADC":"M3","METDIV":"47894","CENTLON":"-077.4761875","GEOID":"4790047894","CENTLAT":"+38.7070832","INTPTLON":"-077.4752783","AREALAND":13192340035,"BASENAME":"Washington-Arlington-Alexandria,
+        DC-VA-MD-WV","INTPTLAT":"+38.7110726","OBJECTID":29}],"Federal American Indian
+        Reservations":[],"Census Tracts":[{"OID":20790331304119,"STATE":"11","FUNCSTAT":"S","NAME":"Census
+        Tract 62.02","AREAWATER":4970897,"LSADC":"CT","CENTLON":"-077.0352173","BASENAME":"62.02","INTPTLAT":"+38.8809933","MTFCC":"G5020","COUNTY":"001","GEOID":"11001006202","CENTLAT":"+38.8801546","INTPTLON":"-077.0363219","AREALAND":6539774,"OBJECTID":25956,"TRACT":"006202"}],"115th
+        Congressional Districts":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Census Divisions":[{"status":"Layer query encountered
+        an error: java.lang.RuntimeException: Failed to return"}],"Census Designated
+        Places":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Consolidated Cities":[{"status":"Layer query encountered
+        an error: java.lang.RuntimeException: Failed to return"}],"Tribal Block Groups":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"2010
+        Census Public Use Microdata Areas":[{"status":"Layer query encountered an
+        error: java.lang.RuntimeException: Failed to return"}],"Micropolitan New England
+        City and Town Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Census Regions":[{"status":"Layer query encountered an
+        error: java.lang.RuntimeException: Failed to return"}],"Metropolitan New England
+        City and Town Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Estates":[{"status":"Layer query encountered an error:
+        java.lang.RuntimeException: Failed to return"}],"Hawaiian Home Lands":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"Incorporated
+        Places":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Micropolitan Statistical Areas":[{"status":"Layer query
+        encountered an error: java.lang.RuntimeException: Failed to return"}],"Counties":[{"OID":27590331264532,"STATE":"11","FUNCSTAT":"F","AREAWATER":18675956,"NAME":"District
+        of Columbia","LSADC":"00","CENTLON":"-077.0162863","BASENAME":"District of
+        Columbia","INTPTLAT":"+38.9041031","COUNTYCC":"H6","MTFCC":"G4020","COUNTY":"001","GEOID":"11001","CENTLAT":"+38.9047577","INTPTLON":"-077.0172290","AREALAND":158351639,"COUNTYNS":"01702382","OBJECTID":632}],"Secondary
+        School Districts":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Alaska Native Regional Corporations":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"Tribal
+        Census Tracts":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Combined New England City and Town Areas":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"States":[{"OID":27490331294090,"STATE":"11","FUNCSTAT":"A","NAME":"District
+        of Columbia","AREAWATER":18675956,"LSADC":"00","CENTLON":"-077.0162863","STUSAB":"DC","BASENAME":"District
+        of Columbia","INTPTLAT":"+38.9041031","DIVISION":"5","MTFCC":"G4000","STATENS":"01702382","GEOID":"11","CENTLAT":"+38.9047577","INTPTLON":"-077.0172290","REGION":"3","AREALAND":158351639,"OBJECTID":54}],"2010
+        Census ZIP Code Tabulation Areas":[{"status":"Layer query encountered an error:
+        java.lang.RuntimeException: Failed to return"}],"2010 Census Urban Clusters":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"Tribal
+        Subdivisions":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"New England City and Town Area Divisions":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"Subbarrios":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"2016
+        State Legislative Districts - Upper":[{"status":"Layer query encountered an
+        error: java.lang.RuntimeException: Failed to return"}],"Metropolitan Statistical
+        Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"2016 State Legislative Districts - Lower":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"State
+        American Indian Reservations":[{"status":"Layer query encountered an error:
+        java.lang.RuntimeException: Failed to return"}],"Tribal Designated Statistical
+        Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"State Designated Tribal Statistical Areas":[{"status":"Layer
+        query encountered an error: java.lang.RuntimeException: Failed to return"}],"2010
+        Census Blocks":[{"BLKGRP":"1","OID":210403964788146,"FUNCSTAT":"S","STATE":"11","AREAWATER":0,"NAME":"Block
+        1031","SUFFIX":"","LSADC":"BK","CENTLON":"-077.0365336","LWBLKTYP":"L","BASENAME":"1031","BLOCK":"1031","INTPTLAT":"+38.8971157","MTFCC":"G5040","COUNTY":"001","GEOID":"110010062021031","CENTLAT":"+38.8971157","INTPTLON":"-077.0365336","AREALAND":91475,"OBJECTID":953677,"TRACT":"006202"}],"Unified
+        School Districts":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"County Subdivisions":[{"status":"Layer query encountered
+        an error: java.lang.RuntimeException: Failed to return"}],"Alaska Native Village
+        Statistical Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}],"Off-Reservation Trust Lands":[{"status":"Layer query
+        encountered an error: java.lang.RuntimeException: Failed to return"}],"American
+        Indian Joint-Use Areas":[{"status":"Layer query encountered an error: java.lang.RuntimeException:
+        Failed to return"}]},"matchedAddress":"1600 PENNSYLVANIA AVE NW, WASHINGTON,
+        DC, 20502","coordinates":{"x":-77.03535,"y":38.898754},"addressComponents":{"zip":"20502","city":"WASHINGTON","state":"DC","preDirection":"","preType":"","streetName":"PENNSYLVANIA","suffixType":"AVE","suffixDirection":"NW","suffixQualifier":"","fromAddress":"1600","toAddress":"1698","preQualifier":""}}]}}'}
+    headers:
+      cache-control: [private, 'no-cache, no-store, max-age=0']
+      content-language: [en-US]
+      content-type: [application/json]
+      date: ['Tue, 31 Oct 2017 17:52:24 GMT']
+      expires: ['Wed, 31 Dec 1969 23:59:59 GMT']
+      pragma: [no-cache]
+      strict-transport-security: [max-age=31536000]
+      vary: [Origin]
+      x-frame-options: [Deny]
+    status: {code: 200, message: OK}
+version: 1

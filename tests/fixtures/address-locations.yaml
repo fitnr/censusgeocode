@@ -1,0 +1,27 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.12.4]
+    method: GET
+    uri: https://geocoding.geo.census.gov/geocoder/locations/address?city=Washington&zip=20500&format=json&vintage=Current_Current&benchmark=Public_AR_Current&state=DC&street=1600+Pennsylvania+Avenue+NW
+  response:
+    body: {string: !!python/unicode '{"result":{"input":{"address":{"state":"DC","street":"1600
+        Pennsylvania Avenue NW","city":"Washington","zip":"20500"},"benchmark":{"id":"4","isDefault":false,"benchmarkName":"Public_AR_Current","benchmarkDescription":"Public
+        Address Ranges - Current Benchmark"}},"addressMatches":[{"matchedAddress":"1600
+        PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502","coordinates":{"x":-77.03535,"y":38.898754},"tigerLine":{"tigerLineId":"76225813","side":"L"},"addressComponents":{"fromAddress":"1600","toAddress":"1698","preQualifier":"","preDirection":"","preType":"","streetName":"PENNSYLVANIA","suffixType":"AVE","suffixDirection":"NW","suffixQualifier":"","state":"DC","city":"WASHINGTON","zip":"20502"}}]}}'}
+    headers:
+      cache-control: [private, 'no-cache, no-store, max-age=0']
+      content-language: [en-US]
+      content-type: [application/json]
+      date: ['Tue, 31 Oct 2017 17:52:24 GMT']
+      expires: ['Thu, 01 Jan 1970 00:00:00 GMT']
+      pragma: [no-cache]
+      strict-transport-security: [max-age=31536000]
+      vary: [Origin]
+      x-frame-options: [Deny]
+    status: {code: 200, message: OK}
+version: 1
