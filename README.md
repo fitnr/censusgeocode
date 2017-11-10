@@ -1,9 +1,7 @@
 Census Geocode
 --------------
 
-Census Geocode is a Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with both Python 2 and 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude.
-
-Census Geocode is very lightweight, and relies only on [requests](http://docs.python-requests.org/en/latest/).
+Census Geocode is a light weight Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with both Python 2 and 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude, or a batch file into a parsed address and coordinates.
 
 Basic example:
 
@@ -15,6 +13,7 @@ cg = CensusGeocode()
 cg.coordinates(x=-76, y=41)
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC')
 cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zipcode='22052')
+cg.addressbatch('data/addresses.csv')
 ```
 
 Use the returntype keyword to specify 'locations' or 'geographies'. 'Locations' yields structured information about the address, and 'geographies' yields information about the Census geographies. Geographies is the default.
@@ -135,20 +134,52 @@ Queries return a CensusResult object, which is basically a Python list with an e
 
 ## Command line tool
 
-The `censusgeocode` tool is bare bones. It takes one argument, an address, and returns a comma-delimited longitude, latitude pair.
+The `censusgeocode` tool has two settings.
+
+At the simplest, it takes one argument, an address, and returns a comma-delimited longitude, latitude pair.
 ````bash
 censusgeocode '100 Fifth Avenue, New York, NY'
--73.992195, 40.73797
+-73.992195,40.73797
 
 censusgeocode '1600 Pennsylvania Avenue, Washington DC'
--77.03535, 38.898754
+-77.03535,38.898754
 ````
 
 The Census geocoder is reasonably good at recognizing non-standard addresses.
 ````bash
 censusgeocode 'Hollywood & Vine, LA, CA'
--118.32668, 34.101624
+-118.32668,34.101624
 ````
+
+It can also use the Census Geocoder's batch function to process an entire file. The file be comma-delimited, have no header, and the following columns:
+````
+uniqe id, street address, state, city, zip code
+````
+
+The geocoder can read from a file:
+````
+censusgeocode --csv tests/fixtures/batch.csv
+````
+
+Or from stdin, using `-` as the filename:
+````
+cat tests/fixtures/batch.csv | censusgeocode --csv -
+````
+
+The output will be a CSV file (with a header) and the columns:
+* id
+* address
+* match
+* matchtype
+* parsed
+* coordinate
+* tigerlineid
+* side
+* lat
+* lon
+
+If your data doesn't have a unique id, try adding line numbers with the command line utility `nl`.
+
 
 ## License
 
