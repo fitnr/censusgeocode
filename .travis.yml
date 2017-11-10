@@ -22,6 +22,7 @@ install:
 script:
     - coverage run --source=censusgeocode setup.py test
     - censusgeocode --version
+    - censusgeocode --csv tests/fixtures/batch.csv || echo failed
 
 after_success:
     - coverage report
