@@ -64,6 +64,17 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert results[0]['matchedAddress'].upper() == '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502'
         assert results[0]['addressComponents']['streetName'] == 'PENNSYLVANIA'
 
+    @vcr.use_cassette('tests/fixtures/test_benchmark_vintage.yaml')
+    def test_benchmark_vintage(self):
+        bmark, vint = 'Public_AR_Census2010', 'Census2010_Census2010'
+
+        cg = CensusGeocode(benchmark=bmark, vintage=vint)
+        result = cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500', returntype='geographies')
+
+        self.assertEqual(result.input['benchmark']['benchmarkName'], bmark)
+        self.assertEqual(result.input['vintage']['vintageName'], vint)
+        self.assertEqual(result[0]['geographies']['Census Tracts'][0]['GEOID'], '11001006202')
+
     @vcr.use_cassette('tests/fixtures/address-batch.yaml')
     def test_addressbatch(self):
         result = self.cg.addressbatch('tests/fixtures/batch.csv', 'locations')

@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/address?vintage=Census2010_Census2010&street=1600+Pennsylvania+Avenue+NW&state=DC&zip=20500&format=json&benchmark=Public_AR_Census2010&city=Washington
+  response:
+    body: {string: '{"result":{"input":{"address":{"state":"DC","street":"1600 Pennsylvania
+        Avenue NW","zip":"20500","city":"Washington"},"benchmark":{"id":"9","isDefault":false,"benchmarkName":"Public_AR_Census2010","benchmarkDescription":"Public
+        Address Ranges - Census 2010 Benchmark"},"vintage":{"id":"910","isDefault":true,"vintageName":"Census2010_Census2010","vintageDescription":"Census2010
+        Vintage - Census2010 Benchmark"}},"addressMatches":[{"geographies":{"Census
+        Blocks":[{"BLKGRP":"1","UR":"","OID":210403964787808,"FUNCSTAT":"S","STATE":"11","AREAWATER":0,"NAME":"Block
+        1036","SUFFIX":"","LSADC":"BK","CENTLON":"-077.0387315","HU100":0,"LWBLKTYP":"L","BLOCK":"1036","BASENAME":"1036","INTPTLAT":"+38.8975764","POP100":0,"MTFCC":"G5040","COUNTY":"001","GEOID":"110010062021036","CENTLAT":"+38.8975764","INTPTLON":"-077.0387315","AREALAND":33422,"OBJECTID":1734550,"TRACT":"006202"}],"Counties":[{"UR":"","OID":27590331264532,"STATE":"11","FUNCSTAT":"F","AREAWATER":18884970,"NAME":"District
+        of Columbia","LSADC":"00","HU100":296719,"CENTLON":"-077.0162725","BASENAME":"District
+        of Columbia","INTPTLAT":"+38.9041485","COUNTYCC":"H6","POP100":601723,"MTFCC":"G4020","COUNTY":"001","GEOID":"11001","CENTLAT":"+38.9047564","INTPTLON":"-077.0170942","AREALAND":158114680,"COUNTYNS":"01702382","OBJECTID":1879}],"Census
+        Tracts":[{"UR":"","OID":20790331304119,"STATE":"11","FUNCSTAT":"S","AREAWATER":4835490,"NAME":"Census
+        Tract 62.02","LSADC":"CT","CENTLON":"-077.0353820","HU100":8,"BASENAME":"62.02","INTPTLAT":"+38.8810025","POP100":33,"MTFCC":"G5020","COUNTY":"001","GEOID":"11001006202","CENTLAT":"+38.8805263","INTPTLON":"-077.0363001","AREALAND":6583173,"OBJECTID":13964,"TRACT":"006202"}],"States":[{"OID":27490331294090,"UR":"","STATE":"11","FUNCSTAT":"A","NAME":"District
+        of Columbia","AREAWATER":18884970,"LSADC":"00","HU100":296719,"CENTLON":"-077.0162725","STUSAB":"DC","BASENAME":"District
+        of Columbia","INTPTLAT":"+38.9041485","POP100":601723,"DIVISION":"5","MTFCC":"G4000","STATENS":"01702382","GEOID":"11","CENTLAT":"+38.9047564","INTPTLON":"-077.0170942","REGION":"3","AREALAND":158114680,"OBJECTID":47}]},"matchedAddress":"1600
+        Pennsylvania Ave NW, WASHINGTON, DC, 20037","coordinates":{"x":-77.038025,"y":38.898735},"tigerLine":{"tigerLineId":"76225806","side":"L"},"addressComponents":{"fromAddress":"1600","toAddress":"1698","preQualifier":"","preDirection":"","preType":"","streetName":"Pennsylvania","suffixType":"Ave","suffixDirection":"NW","suffixQualifier":"","state":"DC","zip":"20037","city":"WASHINGTON"}},{"geographies":{"Census
+        Blocks":[{"BLKGRP":"1","UR":"","OID":210403964788146,"FUNCSTAT":"S","STATE":"11","AREAWATER":0,"NAME":"Block
+        1031","SUFFIX":"","LSADC":"BK","CENTLON":"-077.0365312","HU100":1,"LWBLKTYP":"L","BLOCK":"1031","BASENAME":"1031","INTPTLAT":"+38.8971175","POP100":5,"MTFCC":"G5040","COUNTY":"001","GEOID":"110010062021031","CENTLAT":"+38.8971175","INTPTLON":"-077.0365312","AREALAND":91321,"OBJECTID":1731109,"TRACT":"006202"}],"Counties":[{"UR":"","OID":27590331264532,"STATE":"11","FUNCSTAT":"F","AREAWATER":18884970,"NAME":"District
+        of Columbia","LSADC":"00","HU100":296719,"CENTLON":"-077.0162725","BASENAME":"District
+        of Columbia","INTPTLAT":"+38.9041485","COUNTYCC":"H6","POP100":601723,"MTFCC":"G4020","COUNTY":"001","GEOID":"11001","CENTLAT":"+38.9047564","INTPTLON":"-077.0170942","AREALAND":158114680,"COUNTYNS":"01702382","OBJECTID":1879}],"Census
+        Tracts":[{"UR":"","OID":20790331304119,"STATE":"11","FUNCSTAT":"S","AREAWATER":4835490,"NAME":"Census
+        Tract 62.02","LSADC":"CT","CENTLON":"-077.0353820","HU100":8,"BASENAME":"62.02","INTPTLAT":"+38.8810025","POP100":33,"MTFCC":"G5020","COUNTY":"001","GEOID":"11001006202","CENTLAT":"+38.8805263","INTPTLON":"-077.0363001","AREALAND":6583173,"OBJECTID":13964,"TRACT":"006202"}],"States":[{"OID":27490331294090,"UR":"","STATE":"11","FUNCSTAT":"A","NAME":"District
+        of Columbia","AREAWATER":18884970,"LSADC":"00","HU100":296719,"CENTLON":"-077.0162725","STUSAB":"DC","BASENAME":"District
+        of Columbia","INTPTLAT":"+38.9041485","POP100":601723,"DIVISION":"5","MTFCC":"G4000","STATENS":"01702382","GEOID":"11","CENTLAT":"+38.9047564","INTPTLON":"-077.0170942","REGION":"3","AREALAND":158114680,"OBJECTID":47}]},"matchedAddress":"1600
+        Pennsylvania Ave NW, WASHINGTON, DC, 20502","coordinates":{"x":-77.036385,"y":38.898735},"tigerLine":{"tigerLineId":"76225813","side":"L"},"addressComponents":{"fromAddress":"1522","toAddress":"1698","preQualifier":"","preDirection":"","preType":"","streetName":"Pennsylvania","suffixType":"Ave","suffixDirection":"NW","suffixQualifier":"","state":"DC","zip":"20502","city":"WASHINGTON"}}]}}'}
+    headers:
+      Cache-Control: [private, 'no-cache, no-store, max-age=0']
+      Content-Language: [en-US]
+      Content-Type: [application/json]
+      Date: ['Fri, 10 Nov 2017 20:24:29 GMT']
+      Expires: ['Thu, 01 Jan 1970 00:00:00 GMT']
+      Pragma: [no-cache]
+      Strict-Transport-Security: [max-age=31536000]
+      Vary: [Origin]
+      X-Frame-Options: [Deny]
+    status: {code: 200, message: OK}
+version: 1

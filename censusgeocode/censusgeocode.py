@@ -27,9 +27,26 @@ import requests
 from requests.exceptions import RequestException
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2013', 'ACS2012', 'Census2010', 'Census2000']
-BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
+vintages = [
+    'Current_Current',
+    'Census2010_Current',
+    'ACS2013_Current',
+    'ACS2014_Current',
+    'ACS2015_Current',
+    'ACS2016_Current',
+    'ACS2017_Current',
+    'Current_ACS2017',
+    'Census2010_ACS2017',
+    'ACS2013_ACS2017',
+    'ACS2014_ACS2017',
+    'ACS2015_ACS2017',
+    'ACS2016_ACS2017',
+    'ACS2017_ACS2017',
+    'Census2000_Census2010',
+    'Census2010_Census2010',
+]
 
+benchmarks = ['Public_AR_Current', 'Public_AR_ACS2017', 'Public_AR_Census2010']
 
 class CensusGeocode(object):
     '''Fetch results from the Census Geocoder'''
@@ -44,17 +61,17 @@ class CensusGeocode(object):
                 'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
     }
 
-    def __init__(self, benchmark=None, geovintage=None):
+    def __init__(self, benchmark=None, vintage=None):
         '''
-        benchmark -- A name that references the version of the locator to use. See http://geocoding.geo.census.gov/geocoder/benchmarks
-        geovintage -- The geography part of the desired vintage. For instance, for the vintage 'ACS2014_Current':
-        >>> CensusGeocode(benchmark='Current', geovintage='ACS_2014')
-        See http://geocoding.geo.census.gov/geocoder/vintages?form
-        '''
-        self.benchmark = benchmark or BENCHMARKS[0]
-        geographyvintage = geovintage or GEOGRAPHYVINTAGES[0]
+        Arguments:
+            benchmark (str): A name that references the version of the locator to use. See https://geocoding.geo.census.gov/geocoder/benchmarks
+            vintage (str): The geography part of the desired vintage. See: https://geocoding.geo.census.gov/geocoder/vintages?form
 
-        self.vintage = geographyvintage + self.benchmark.replace('Public_AR', '')
+        >>> CensusGeocode(benchmark='Public_AR_Current', vintage='Current_Current')
+        '''
+        self.benchmark = benchmark or benchmarks[0]
+        self.vintage = vintage or vintages[0]
+
 
     def _geturl(self, searchtype, returntype=None):
         returntype = returntype or self.returntypes[0]
@@ -141,7 +158,6 @@ class CensusGeocode(object):
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
 
-
     def _post_batch(self, data=None, f=None, returntype=None, **kwargs):
         returntype = returntype or 'geographies'
         url = self._geturl('addressbatch', returntype)
@@ -180,6 +196,7 @@ class CensusGeocode(object):
     def addressbatch(self, data, returntype=None, **kwargs):
         '''
         Send either a CSV file or data to the addressbatch API.
+        According to the Census, "there is currently an upper limit of 1000 records per batch file."
         If a file, must have no header and fields id,street,city,state,zip
         If data, should be a list of dicts with the above fields (although ID is optional)
         '''

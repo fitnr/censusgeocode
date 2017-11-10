@@ -8,5 +8,6 @@
 # http://opensource.org/licenses/LGPL-3.0
 # Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
 
-from .censusgeocode import CensusGeocode
+from .censusgeocode import CensusGeocode, benchmarks, vintages
+
 __version__ = '0.4.0'

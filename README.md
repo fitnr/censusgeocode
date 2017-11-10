@@ -8,9 +8,7 @@ It's strongly recommended to review the [Census Geocoder docs](https://geocoding
 Basic example:
 
 ```python
-from censusgeocode import CensusGeocode
-
-cg = CensusGeocode()
+import censusgeocode as cg
 
 cg.coordinates(x=-76, y=41)
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC')
@@ -134,6 +132,17 @@ Queries return a CensusResult object, which is basically a Python list with an e
 }]
 ```
 
+### Advanced
+
+By default, the geocoder uses the "Current" vintage and benchmarks. To use another vintage or benchmark, use the `CensusGeocode` class:
+````python
+import censusgeocode
+cg = censusgeocode.CensusGeocode(benchmark='Public_AR_Census2010', vintage='Census2010_Census2010')
+cg.onelineaddress(foobar)
+````
+
+The Census may update the available benchmarks and vintages. Review the Census Geocoder docs for the currently available [benchmarks](https://geocoding.geo.census.gov/geocoder/benchmarks) and [vintages](https://geocoding.geo.census.gov/geocoder/vintages?form).
+
 ## Command line tool
 
 The `censusgeocode` tool has two settings.
@@ -153,20 +162,23 @@ censusgeocode 'Hollywood & Vine, LA, CA'
 -118.32668,34.101624
 ````
 
-It can also use the Census Geocoder's batch function to process an entire file. The file be comma-delimited, have no header, and the following columns:
+It can also use the Census Geocoder's batch function to process an entire file. The file must be comma-delimited, have no header, and include the following columns:
 ````
-uniqe id, street address, state, city, zip code
+unique id, street address, state, city, zip code
 ````
 
 The geocoder can read from a file:
 ````
 censusgeocode --csv tests/fixtures/batch.csv
 ````
+([example file](https://github.com/fitnr/censusgeocode/blob/master/tests/fixtures/batch.csv))
 
 Or from stdin, using `-` as the filename:
 ````
 cat tests/fixtures/batch.csv | censusgeocode --csv -
 ````
+
+According to the Census docs, the batch geocoder is limited to 1000 rows.
 
 The output will be a CSV file (with a header) and the columns:
 * id
@@ -180,8 +192,10 @@ The output will be a CSV file (with a header) and the columns:
 * lat
 * lon
 
-If your data doesn't have a unique id, try adding line numbers with the command line utility `nl`.
-
+If your data doesn't have a unique id, try adding line numbers with the Unix command line utility `nl`:
+```
+nl -s , input.csv | censusgeocode --csv - > output.csv
+```
 
 ## License
 
