@@ -3,6 +3,8 @@ Census Geocode
 
 Census Geocode is a light weight Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with both Python 2 and 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude, or a batch file into a parsed address and coordinates.
 
+It's strongly recommended to review the [Census Geocoder docs](https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf) before using this module.
+
 Basic example:
 
 ```python
