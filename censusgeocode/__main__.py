@@ -34,7 +34,7 @@ def main():
         'comma-delimited file of addresses. No header. '
         'Must have the following columns: id, street address, city, state, zip. '
         'id must be a unique. '
-        'Read from stdin with -.')
+        'Read from stdin with -')
     )
     parser.add_argument('--timeout', metavar='SECONDS', type=int, default=12, help='Request timeout [default: 12]')
 

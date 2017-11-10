@@ -9,4 +9,4 @@
 # Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
 
 from .censusgeocode import CensusGeocode
-__version__ = '0.3.0'
+__version__ = '0.4.0'

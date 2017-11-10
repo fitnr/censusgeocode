@@ -1,3 +1,8 @@
+0.4.0
+-----
+
+* Add support for address batch functionality, including to command line tool
+
 0.3.0
 -----
 

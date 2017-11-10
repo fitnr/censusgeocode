@@ -10,6 +10,9 @@
 
 from setuptools import setup
 
+with open('censusgeocode/__init__.py') as i:
+    version = next(r for r in i.readlines() if '__version__' in r).split('=')[1].strip('"\' \n')
+
 try:
     readme = open('README.rst').read()
 except IOError:
@@ -20,7 +23,7 @@ except IOError:
 
 setup(
     name='censusgeocode',
-    version='0.3.0',
+    version=version,
     description='Thin Python wrapper for the US Census Geocoder',
     long_description=readme,
     keywords='census geocode api',
