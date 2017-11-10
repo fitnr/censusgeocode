@@ -77,13 +77,13 @@ class CensusGeoCodeTestCase(unittest.TestCase):
 
     @vcr.use_cassette('tests/fixtures/address-batch.yaml')
     def test_addressbatch(self):
-        result = self.cg.addressbatch('tests/fixtures/batch.csv', 'locations')
+        result = self.cg.addressbatch('tests/fixtures/batch.csv', returntype='locations')
         assert isinstance(result, list)
         resultdict = {int(r['id']): r for r in result}
         assert resultdict[3]['parsed'] == '3 GRAMERCY PARK W, NEW YORK, NY, 10003'
         assert resultdict[2]['match'] is False
 
-        result = self.cg.addressbatch('tests/fixtures/batch.csv', 'geographies')
+        result = self.cg.addressbatch('tests/fixtures/batch.csv', returntype='geographies')
         assert isinstance(result, list)
         resultdict = {int(r['id']): r for r in result}
         assert resultdict[3]['tigerlineid'] == '59653655'
