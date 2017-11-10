@@ -132,7 +132,6 @@ class CensusGeocode(object):
         '''Geocode an an address passed as one string.
         e.g. "4600 Silver Hill Rd, Suitland, MD 20746"
         '''
-
         fields = {
             'address': address,
         }
@@ -161,8 +160,8 @@ class CensusGeocode(object):
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
 
-    def _post_batch(self, data=None, f=None, returntype=None, **kwargs):
-        returntype = returntype or 'geographies'
+    def _post_batch(self, data=None, f=None, **kwargs):
+        returntype = kwargs.get('returntype', 'geographies')
         url = self._geturl('addressbatch', returntype)
 
         if data is not None:
@@ -196,7 +195,7 @@ class CensusGeocode(object):
         finally:
             f.close()
 
-    def addressbatch(self, data, returntype=None, **kwargs):
+    def addressbatch(self, data, **kwargs):
         '''
         Send either a CSV file or data to the addressbatch API.
         According to the Census, "there is currently an upper limit of 1000 records per batch file."
@@ -205,16 +204,16 @@ class CensusGeocode(object):
         '''
         # Does data quack like a file handle?
         if hasattr(data, 'read'):
-            return self._post_batch(f=data, returntype=returntype, **kwargs)
+            return self._post_batch(f=data, **kwargs)
 
         # Check if it's a string file
         elif isinstance(data, string_types):
             with open(data, 'rb') as f:
-                return self._post_batch(f=f, returntype=returntype, **kwargs)
+                return self._post_batch(f=f, **kwargs)
 
         else:
             # Otherwise, assume a list of dicts
-            return self._post_batch(data=data, returntype=returntype, **kwargs)
+            return self._post_batch(data=data, **kwargs)
 
 
 class GeographyResult(dict):
