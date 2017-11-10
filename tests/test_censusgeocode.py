@@ -11,7 +11,7 @@
 import unittest
 import vcr
 from censusgeocode import CensusGeocode
-from censusgeocode.censusgeocode import CensusResult
+from censusgeocode.censusgeocode import AddressResult, GeographyResult
 
 
 class CensusGeoCodeTestCase(unittest.TestCase):
@@ -22,21 +22,17 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         self.cg = CensusGeocode()
 
     @vcr.use_cassette('tests/fixtures/coordinates.yaml')
-    def test_returns(self):
-        results = self.cg.coordinates(-74, 43)
-        assert isinstance(results, CensusResult)
-
-    @vcr.use_cassette('tests/fixtures/coordinates.yaml')
-    def test_input(self):
-        results = self.cg.coordinates(-74, 43)
+    def test_returns_geo(self):
+        results = self.cg.coordinates(-74, 43, returntype='geographies')
+        assert isinstance(results, GeographyResult)
         assert results.input
 
     @vcr.use_cassette('tests/fixtures/coordinates.yaml')
     def test_coords(self):
         results = self.cg.coordinates(-74, 43)
-        assert results[0]['Counties'][0]['BASENAME'] == 'Saratoga'
-        assert results[0]['Counties'][0]['GEOID'] == '36091'
-        assert results[0]['Census Tracts'][0]['BASENAME'] == "615"
+        assert results['Counties'][0]['BASENAME'] == 'Saratoga'
+        assert results['Counties'][0]['GEOID'] == '36091'
+        assert results['Census Tracts'][0]['BASENAME'] == "615"
 
     def test_url(self):
         r = self.cg._geturl('coordinates', 'geographies')

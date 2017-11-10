@@ -86,6 +86,7 @@ class CensusGeocode(object):
 
     def coordinates(self, x, y, **kwargs):
         '''Geocode a (lon, lat) coordinate.'''
+        kwargs['returntype'] = 'geographies'
         fields = {
             'x': x,
             'y': y
