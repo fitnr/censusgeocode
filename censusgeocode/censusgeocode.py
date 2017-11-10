@@ -38,6 +38,12 @@ class CensusGeocode(object):
     _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
 
+    batchfields = {
+        'locations': ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate', 'tigerlineid', 'side'],
+        'geographies': ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate',
+                'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
+    }
+
     def __init__(self, benchmark=None, geovintage=None):
         '''
         benchmark -- A name that references the version of the locator to use. See http://geocoding.geo.census.gov/geocoder/benchmarks
@@ -117,15 +123,10 @@ class CensusGeocode(object):
         return self._fetch('onelineaddress', fields, **kwargs)
 
     def _parse_batch_result(self, data, returntype):
-        if returntype not in self.returntypes:
+        try:
+            fieldnames = self.batchfields[returntype]
+        except KeyError:
             raise ValueError('unknown returntype: {}'.format(returntype))
-
-        if returntype == 'locations':
-            fieldnames = ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate', 'tigerlineid', 'side']
-
-        elif returntype == 'geographies':
-            fieldnames = ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate',
-                'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
 
         def parse(row):
             if row['coordinate']:
@@ -182,8 +183,12 @@ class CensusGeocode(object):
         If a file, must have no header and fields id,street,city,state,zip
         If data, should be a list of dicts with the above fields (although ID is optional)
         '''
+        # Does data quack like a file handle?
+        if hasattr(data, 'read'):
+            return self._post_batch(f=data, returntype=returntype, **kwargs)
+
         # Check if it's a string file
-        if isinstance(data, string_types):
+        elif isinstance(data, string_types):
             with open(data, 'rb') as f:
                 return self._post_batch(f=f, returntype=returntype, **kwargs)
 
