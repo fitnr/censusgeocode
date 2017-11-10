@@ -11,3 +11,10 @@
 from .censusgeocode import CensusGeocode, benchmarks, vintages
 
 __version__ = '0.4.0'
+
+cg = CensusGeocode()
+
+coordinates = cg.coordinates
+address = cg.address
+onelineaddress = cg.onelineaddress
+addressbatch = cg.addressbatch
