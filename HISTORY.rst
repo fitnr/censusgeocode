@@ -1,3 +1,9 @@
+0.4.1
+-----
+
+* Add static methods to module
+* Update vintages and benchmarks.
+
 0.4.0
 -----
 
