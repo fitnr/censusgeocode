@@ -40,6 +40,7 @@ setup(
     ],
     install_requires=[
         'requests[security]>=2.18,<3',
+        'requests-toolbelt >=0.8.0, <1',
         'six'
     ],
     tests_require=[
