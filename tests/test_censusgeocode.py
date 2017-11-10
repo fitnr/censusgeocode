@@ -68,6 +68,17 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert results[0]['matchedAddress'].upper() == '1600 PENNSYLVANIA AVE NW, WASHINGTON, DC, 20502'
         assert results[0]['addressComponents']['streetName'] == 'PENNSYLVANIA'
 
+    @vcr.use_cassette('tests/fixtures/address-batch.yaml')
     def test_addressbatch(self):
-        with self.assertRaises(NotImplementedError):
-            self.cg.addressbatch(None)
+        result = self.cg.addressbatch('tests/fixtures/batch.csv', 'locations')
+        assert isinstance(result, list)
+        resultdict = {int(r['id']): r for r in result}
+        assert resultdict[3]['parsed'] == '3 GRAMERCY PARK W, NEW YORK, NY, 10003'
+        assert resultdict[2]['match'] is False
+
+        result = self.cg.addressbatch('tests/fixtures/batch.csv', 'geographies')
+        assert isinstance(result, list)
+        resultdict = {int(r['id']): r for r in result}
+        assert resultdict[3]['tigerlineid'] == '59653655'
+        assert resultdict[3]['statefp'] == '36'
+        assert resultdict[2]['match'] is False

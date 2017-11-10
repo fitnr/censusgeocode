@@ -20,9 +20,12 @@ Census Geocoder wrapper
 see http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
 Accepts either named `lat` and `lng` or x and y inputs.
 """
-
+import csv
+import io
+from six import string_types
 import requests
 from requests.exceptions import RequestException
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 GEOGRAPHYVINTAGES = ['Current', 'ACS2014', 'ACS2013', 'ACS2012', 'Census2010', 'Census2000']
 BENCHMARKS = ['Public_AR_Current', 'Public_AR_ACS2014', 'Public_AR_Census2010']
@@ -112,9 +115,80 @@ class CensusGeocode(object):
 
         return self._fetch('onelineaddress', fields, **kwargs)
 
-    def addressbatch(self, data, returntype=None):
-        raise NotImplementedError
+    def _parse_batch_result(self, data, returntype):
+        if returntype not in self.returntypes:
+            raise ValueError('unknown returntype: {}'.format(returntype))
 
+        if returntype == 'locations':
+            fieldnames = ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate', 'tigerlineid', 'side']
+
+        elif returntype == 'geographies':
+            fieldnames = ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate',
+                'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
+
+        def parse(row):
+            if row['coordinate']:
+                row['lat'], row['lon'] = tuple(float(a) for a in row['coordinate'].split(','))
+            else:
+                row['lat'], row['lon'] = None, None
+            row['match'] = row['match'] == 'Match'
+            return row
+
+        # return as list of dicts
+        with io.StringIO(data) as f:
+            reader = csv.DictReader(f, fieldnames=fieldnames)
+            return [parse(row) for row in reader]
+
+
+    def _post_batch(self, data=None, f=None, returntype=None, **kwargs):
+        returntype = returntype or 'geographies'
+        url = self._geturl('addressbatch', returntype)
+
+        if data is not None:
+            # compile data into a BytesIO
+            f = io.BytesIO()
+            writer = csv.DictWriter(f, fieldnames=['id', 'street', 'city', 'state', 'zip'])
+            for i, row in enumerate(data):
+                row.setdefault('id', i)
+                writer.writerow(row)
+
+            f.seek(0)
+
+        elif f is None:
+            raise ValueError('Need either data or a file for CenusGeocode.addressbatch')
+
+        try:
+            form = MultipartEncoder(fields={
+                'vintage': self.vintage,
+                'benchmark': self.benchmark,
+                'addressFile': ('batch.csv', f, 'text/plain')
+            })
+            h = {'Content-Type': form.content_type}
+
+            with requests.post(url, data=form, timeout=kwargs.get('timeout'), headers=h) as r:
+                # return as list of dicts
+                return self._parse_batch_result(r.text, returntype)
+
+        except RequestException as e:
+            raise e
+
+        finally:
+            f.close()
+
+    def addressbatch(self, data, returntype=None, **kwargs):
+        '''
+        Send either a CSV file or data to the addressbatch API.
+        If a file, must have no header and fields id,street,city,state,zip
+        If data, should be a list of dicts with the above fields (although ID is optional)
+        '''
+        # Check if it's a string file
+        if isinstance(data, string_types):
+            with open(data, 'rb') as f:
+                return self._post_batch(f=f, returntype=returntype, **kwargs)
+
+        else:
+            # Otherwise, assume a list of dicts
+            return self._post_batch(data=data, returntype=returntype, **kwargs)
 
 
 class GeographyResult(dict):
@@ -137,6 +211,7 @@ class GeographyResult(dict):
                     geo['INTPT'] = float(geo['INTPTLON']), float(geo['INTPTLAT'])
                 except ValueError:
                     geo['INTPT'] = ()
+
 
 class AddressResult(list):
 

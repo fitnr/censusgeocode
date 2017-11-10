@@ -1,0 +1,92 @@
+interactions:
+- request:
+    body: !!python/object/new:_io.BytesIO
+      state: !!python/tuple
+      - !!binary |
+        LS01NzZjOWMxMmVjMmM0ODZiOWNkOTk0ZWQyYjllZTYzMQ0KQ29udGVudC1EaXNwb3NpdGlvbjog
+        Zm9ybS1kYXRhOyBuYW1lPSJhZGRyZXNzRmlsZSI7IGZpbGVuYW1lPSJiYXRjaC5jc3YiDQpDb250
+        ZW50LVR5cGU6IHRleHQvcGxhaW4NCg0KMSw0NjAwIFNpbHZlciBIaWxsIFJkLFNVSVRMQU5ELE1E
+        LDIwNzQ2CjIsNzkgV2lzdGZ1bCBWaXN0YSxXaXN0ZnVsIFZpc3RhLElMLAozLDMgR3JhbWVyY3kg
+        UGFyayBXZXN0LE5ldyBZb3JrLE5ZLDEwMDAzCg0KLS01NzZjOWMxMmVjMmM0ODZiOWNkOTk0ZWQy
+        YjllZTYzMQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJiZW5jaG1hcmsi
+        DQoNClB1YmxpY19BUl9DdXJyZW50DQotLTU3NmM5YzEyZWMyYzQ4NmI5Y2Q5OTRlZDJiOWVlNjMx
+        DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9InZpbnRhZ2UiDQoNCkN1cnJl
+        bnRfQ3VycmVudA0KLS01NzZjOWMxMmVjMmM0ODZiOWNkOTk0ZWQyYjllZTYzMS0tDQo=
+      - 0
+      - null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['506']
+      Content-Type: [multipart/form-data; boundary=576c9c12ec2c486b9cd994ed2b9ee631]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://geocoding.geo.census.gov/geocoder/locations/addressbatch
+  response:
+    body: {string: '"3","3 Gramercy Park West, New York, NY, 10003","Match","Exact","3
+        GRAMERCY PARK W, NEW YORK, NY, 10003","-73.98658,40.738323","59653655","R"
+
+        "2","79 Wistful Vista, Wistful Vista, IL, ","No_Match"
+
+        "1","4600 Silver Hill Rd, SUITLAND, MD, 20746","No_Match"
+
+'}
+    headers:
+      Cache-Control: [private]
+      Content-Disposition: [attachment; filename=GeocodeResults.csv]
+      Content-Length: ['255']
+      Content-Type: [text/plain]
+      Date: ['Fri, 10 Nov 2017 18:13:26 GMT']
+      Set-Cookie: [JSESSIONID=SQ2nIvRj-q5PkMFSIVGlCEM3mho0AsbuywRpQQzT-amZk7maqJs5!-1243150265;
+          path=/; secure; HttpOnly]
+      Strict-Transport-Security: [max-age=31536000]
+      Vary: [Origin]
+      X-Frame-Options: [Deny]
+    status: {code: 200, message: OK}
+- request:
+    body: !!python/object/new:_io.BytesIO
+      state: !!python/tuple
+      - !!binary |
+        LS0yYzEyZDI1ZjEyMGY0ZDA4ODNlZmVmMDAwZjUxN2IxZg0KQ29udGVudC1EaXNwb3NpdGlvbjog
+        Zm9ybS1kYXRhOyBuYW1lPSJhZGRyZXNzRmlsZSI7IGZpbGVuYW1lPSJiYXRjaC5jc3YiDQpDb250
+        ZW50LVR5cGU6IHRleHQvcGxhaW4NCg0KMSw0NjAwIFNpbHZlciBIaWxsIFJkLFNVSVRMQU5ELE1E
+        LDIwNzQ2CjIsNzkgV2lzdGZ1bCBWaXN0YSxXaXN0ZnVsIFZpc3RhLElMLAozLDMgR3JhbWVyY3kg
+        UGFyayBXZXN0LE5ldyBZb3JrLE5ZLDEwMDAzCg0KLS0yYzEyZDI1ZjEyMGY0ZDA4ODNlZmVmMDAw
+        ZjUxN2IxZg0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJiZW5jaG1hcmsi
+        DQoNClB1YmxpY19BUl9DdXJyZW50DQotLTJjMTJkMjVmMTIwZjRkMDg4M2VmZWYwMDBmNTE3YjFm
+        DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9InZpbnRhZ2UiDQoNCkN1cnJl
+        bnRfQ3VycmVudA0KLS0yYzEyZDI1ZjEyMGY0ZDA4ODNlZmVmMDAwZjUxN2IxZi0tDQo=
+      - 0
+      - null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['506']
+      Content-Type: [multipart/form-data; boundary=2c12d25f120f4d0883efef000f517b1f]
+      User-Agent: [python-requests/2.18.4]
+    method: POST
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/addressbatch
+  response:
+    body: {string: '"3","3 Gramercy Park West, New York, NY, 10003","Match","Exact","3
+        GRAMERCY PARK W, NEW YORK, NY, 10003","-73.98658,40.738323","59653655","R","36","061","005000","1002"
+
+        "2","79 Wistful Vista, Wistful Vista, IL, ","No_Match"
+
+        "1","4600 Silver Hill Rd, SUITLAND, MD, 20746","No_Match"
+
+'}
+    headers:
+      Cache-Control: [private]
+      Content-Disposition: [attachment; filename=GeocodeResults.csv]
+      Content-Length: ['282']
+      Content-Type: [text/plain]
+      Date: ['Fri, 10 Nov 2017 18:13:27 GMT']
+      Set-Cookie: [JSESSIONID=giKnIvaVJfjtB_KkqiNADRZQfDFTKcI8opBFMnOrXFiw0T6SsNif!2023320970;
+          path=/; secure; HttpOnly]
+      Strict-Transport-Security: [max-age=31536000]
+      Vary: [Origin]
+      X-Frame-Options: [Deny]
+    status: {code: 200, message: OK}
+version: 1
