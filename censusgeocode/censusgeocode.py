@@ -147,9 +147,12 @@ class CensusGeocode(object):
 
         def parse(row):
             if row['coordinate']:
-                row['lat'], row['lon'] = tuple(float(a) for a in row['coordinate'].split(','))
+                row['lon'], row['lat'] = tuple(float(a) for a in row['coordinate'].split(','))
+
             else:
                 row['lat'], row['lon'] = None, None
+
+            del row['coordinate']
             row['match'] = row['match'] == 'Match'
             return row
 

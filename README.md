@@ -186,7 +186,6 @@ The output will be a CSV file (with a header) and the columns:
 * match
 * matchtype
 * parsed
-* coordinate
 * tigerlineid
 * side
 * lat

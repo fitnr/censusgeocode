@@ -63,6 +63,7 @@ def main():
         result = cg.addressbatch(infile, returntype=rettype, timeout=args.timeout)
 
         fieldnames = cg.batchfields[rettype] + ['lat', 'lon']
+        fieldnames.pop(fieldnames.index('coordinate'))
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(result)
