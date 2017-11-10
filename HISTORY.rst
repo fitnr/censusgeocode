@@ -1,3 +1,8 @@
+0.4.2
+----
+
+* Fix reversed coordinate order in batch addresses
+
 0.4.1
 -----
 
