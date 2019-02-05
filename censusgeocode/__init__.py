@@ -10,7 +10,7 @@
 
 from .censusgeocode import CensusGeocode, benchmarks, vintages
 
-__version__ = '0.4.2'
+__version__ = '0.4.3'
 
 cg = CensusGeocode()
 

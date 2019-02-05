@@ -1,5 +1,10 @@
+0.4.3
+-----
+
+* Fixed bug in parsing addressbatch results in some versions of Python (thanks @summonholmes)
+
 0.4.2
-----
+-----
 
 * Fix reversed coordinate order in batch addresses
 

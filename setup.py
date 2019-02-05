@@ -6,7 +6,7 @@
 
 # Licensed under the General Public License (version 3)
 # http://opensource.org/licenses/LGPL-3.0
-# Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
+# Copyright (c) 2015-9, Neil Freeman <contact@fakeisthenewreal.org>
 
 from setuptools import setup
 
@@ -37,8 +37,9 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Operating System :: OS Independent',
     ],
     install_requires=[
