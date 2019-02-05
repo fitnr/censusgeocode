@@ -165,8 +165,8 @@ class CensusGeocode(object):
         url = self._geturl('addressbatch', returntype)
 
         if data is not None:
-            # compile data into a BytesIO
-            f = io.BytesIO()
+            # For Python 3, compile data into a StringIO
+            f = io.StringIO()
             writer = csv.DictWriter(f, fieldnames=['id', 'street', 'city', 'state', 'zip'])
             for i, row in enumerate(data):
                 row.setdefault('id', i)
