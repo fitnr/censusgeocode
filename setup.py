@@ -13,19 +13,15 @@ from setuptools import setup
 with open('censusgeocode/__init__.py') as i:
     version = next(r for r in i.readlines() if '__version__' in r).split('=')[1].strip('"\' \n')
 
-try:
-    readme = open('README.rst').read()
-except IOError:
-    try:
-        readme = open('README.md').read()
-    except IOError:
-        readme = ''
+with open('README.md') as f:
+    readme = f.read()
 
 setup(
     name='censusgeocode',
     version=version,
     description='Thin Python wrapper for the US Census Geocoder',
     long_description=readme,
+    long_description_content_type='text/markdown',
     keywords='census geocode api',
     author='Neil Freeman',
     author_email='contact@fakeisthenewreal.org',
