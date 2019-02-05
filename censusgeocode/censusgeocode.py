@@ -48,17 +48,16 @@ vintages = [
 
 benchmarks = ['Public_AR_Current', 'Public_AR_ACS2017', 'Public_AR_Census2010']
 
+
 class CensusGeocode(object):
     '''Fetch results from the Census Geocoder'''
-    # pylint: disable=R0921
-
     _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
     returntypes = ['geographies', 'locations']
 
     batchfields = {
         'locations': ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate', 'tigerlineid', 'side'],
         'geographies': ['id', 'address', 'match', 'matchtype', 'parsed', 'coordinate',
-                'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
+                        'tigerlineid', 'side', 'statefp', 'countyfp', 'tract', 'block']
     }
 
     def __init__(self, benchmark=None, vintage=None):
@@ -72,34 +71,32 @@ class CensusGeocode(object):
         self.benchmark = benchmark or benchmarks[0]
         self.vintage = vintage or vintages[0]
 
-
     def _geturl(self, searchtype, returntype=None):
         returntype = returntype or self.returntypes[0]
         return self._url.format(returntype=returntype, searchtype=searchtype)
 
-    def _fetch(self, searchtype, fields, layers=None, returntype=None, timeout=None):
+    def _fetch(self, searchtype, fields, **kwargs):
+        '''Fetch a response from the Geocoding API.'''
         fields['vintage'] = self.vintage
         fields['benchmark'] = self.benchmark
         fields['format'] = 'json'
 
-        if layers:
-            fields['layers'] = layers
+        if 'layers' in kwargs:
+            fields['layers'] = kwargs['layers']
 
-        returntype = returntype or 'geographies'
-
+        returntype = kwargs.get('returntype', 'geographies')
         url = self._geturl(searchtype, returntype)
 
         try:
-            with requests.get(url, params=fields, timeout=timeout) as r:
+            with requests.get(url, params=fields, timeout=kwargs.get('timeout')) as r:
                 content = r.json()
                 if "addressMatches" in content.get('result', {}):
                     return AddressResult(content)
 
-                elif "geographies" in content.get('result', {}):
+                if "geographies" in content.get('result', {}):
                     return GeographyResult(content)
 
-                else:
-                    raise ValueError()
+                raise ValueError()
 
         except (ValueError, KeyError):
             raise ValueError("Unable to parse response from Census")
