@@ -178,7 +178,7 @@ Or from stdin, using `-` as the filename:
 cat tests/fixtures/batch.csv | censusgeocode --csv -
 ````
 
-According to the Census docs, the batch geocoder is limited to 1000 rows.
+According to the Census docs, the batch geocoder is limited to 10,000 rows.
 
 The output will be a CSV file (with a header) and the columns:
 * id
