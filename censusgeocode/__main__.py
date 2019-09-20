@@ -19,10 +19,8 @@ import io
 import csv
 import argparse
 from .censusgeocode import CensusGeocode
+from .censusgeocode import vintages, benchmarks
 from . import __version__
-
-
-rettype = 'locations'
 
 
 def main():
@@ -36,13 +34,25 @@ def main():
         'id must be a unique. '
         'Read from stdin with -')
     )
+    parser.add_argument('--rettype', choices=['locations', 'geographies'],
+        default='locations', help=(
+            'Query type. Geographies will return state, county, tract, '
+            'and block code in addition to TIGER/Line info and '
+            'latitude and longitude. For use with --csv (batch geocoding)')
+    )
+    parser.add_argument('--vintage', choices=vintages, default=vintages[0],
+        help='Geography vintage that geographies refer to'
+    )
+    parser.add_argument('--benchmark', choices=benchmarks, default=benchmarks[0],
+        help='Time period Census data (address ranges) refer to'
+    )
     parser.add_argument('--timeout', metavar='SECONDS', type=int, default=12, help='Request timeout [default: 12]')
 
     args = parser.parse_args()
-    cg = CensusGeocode()
+    cg = CensusGeocode(benchmark=args.benchmark, vintage=args.vintage)
 
     if args.address:
-        result = cg.onelineaddress(args.address, returntype=rettype, timeout=args.timeout)
+        result = cg.onelineaddress(args.address, returntype=args.rettype, timeout=args.timeout)
 
         try:
             print('{},{}'.format(result[0]['coordinates']['x'], result[0]['coordinates']['y']))
@@ -60,9 +70,9 @@ def main():
         else:
             infile = args.csv
 
-        result = cg.addressbatch(infile, returntype=rettype, timeout=args.timeout)
+        result = cg.addressbatch(infile, returntype=args.rettype, timeout=args.timeout)
 
-        fieldnames = cg.batchfields[rettype] + ['lat', 'lon']
+        fieldnames = cg.batchfields[args.rettype] + ['lat', 'lon']
         fieldnames.pop(fieldnames.index('coordinate'))
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
