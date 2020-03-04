@@ -143,8 +143,10 @@ class CensusGeocode(object):
 
         def parse(row):
             if row['coordinate']:
-                row['lon'], row['lat'] = tuple(float(a) for a in row['coordinate'].split(','))
-
+                try:
+                    row['lon'], row['lat'] = tuple(float(a) for a in row['coordinate'].split(','))
+                except Exception as e:
+                    row['lon'], row['lat'] = None,None
             else:
                 row['lat'], row['lon'] = None, None
 
