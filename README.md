@@ -12,7 +12,7 @@ import censusgeocode as cg
 
 cg.coordinates(x=-76, y=41)
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC')
-cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zipcode='22052')
+cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zipcode='20006')
 cg.addressbatch('data/addresses.csv')
 ```
 
