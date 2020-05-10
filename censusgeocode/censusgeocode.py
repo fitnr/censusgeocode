@@ -35,6 +35,7 @@ vintages = [
     'ACS2015_Current',
     'ACS2016_Current',
     'ACS2017_Current',
+    'ACS2018_Current',
     'Current_ACS2017',
     'Census2010_ACS2017',
     'ACS2013_ACS2017',
@@ -42,6 +43,7 @@ vintages = [
     'ACS2015_ACS2017',
     'ACS2016_ACS2017',
     'ACS2017_ACS2017',
+    'ACS2018_ACS2018',
     'Census2000_Census2010',
     'Census2010_Census2010',
 ]
@@ -63,8 +65,10 @@ class CensusGeocode(object):
     def __init__(self, benchmark=None, vintage=None):
         '''
         Arguments:
-            benchmark (str): A name that references the version of the locator to use. See https://geocoding.geo.census.gov/geocoder/benchmarks
-            vintage (str): The geography part of the desired vintage. See: https://geocoding.geo.census.gov/geocoder/vintages?form
+            benchmark (str): A name that references the version of the locator to use.
+                See https://geocoding.geo.census.gov/geocoder/benchmarks
+            vintage (str): The geography part of the desired vintage.
+                See: https://geocoding.geo.census.gov/geocoder/vintages?form
 
         >>> CensusGeocode(benchmark='Public_AR_Current', vintage='Current_Current')
         '''
@@ -142,11 +146,13 @@ class CensusGeocode(object):
             raise ValueError('unknown returntype: {}'.format(returntype))
 
         def parse(row):
-            if row['coordinate']:
-                row['lon'], row['lat'] = tuple(float(a) for a in row['coordinate'].split(','))
+            row['lat'], row['lon'] = None, None
 
-            else:
-                row['lat'], row['lon'] = None, None
+            if row['coordinate']:
+                try:
+                    row['lon'], row['lat'] = tuple(float(a) for a in row['coordinate'].split(','))
+                except:
+                    pass
 
             del row['coordinate']
             row['match'] = row['match'] == 'Match'
@@ -204,13 +210,12 @@ class CensusGeocode(object):
             return self._post_batch(f=data, **kwargs)
 
         # Check if it's a string file
-        elif isinstance(data, string_types):
+        if isinstance(data, string_types):
             with open(data, 'rb') as f:
                 return self._post_batch(f=f, **kwargs)
 
-        else:
-            # Otherwise, assume a list of dicts
-            return self._post_batch(data=data, **kwargs)
+        # Otherwise, assume a list of dicts
+        return self._post_batch(data=data, **kwargs)
 
 
 class GeographyResult(dict):
