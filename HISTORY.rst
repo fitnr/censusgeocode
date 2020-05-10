@@ -1,3 +1,10 @@
+0.4.4
+-----
+
+* Handle misformatted batch responses from the Census
+* Add more options for command line tool
+* Codify support for Python 3.7, 3.8. Drop support for Python 3.4
+
 0.4.3
 -----
 
