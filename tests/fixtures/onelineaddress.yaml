@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.12.4]
     method: GET
-    uri: https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?layers=all&vintage=Current_Current&format=json&benchmark=Public_AR_Current&address=1600+Pennsylvania+Avenue+NW%2C+Washington%2C+DC%2C+20500
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?layers=all&format=json&address=1600+Pennsylvania+Avenue+NW%2C+Washington%2C+DC%2C+20500
   response:
     body: {string: !!python/unicode '{"result":{"input":{"address":{"address":"1600
         Pennsylvania Avenue NW, Washington, DC, 20500"},"benchmark":{"benchmarkDescription":"Public

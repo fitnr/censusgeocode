@@ -19,34 +19,46 @@ import io
 import csv
 import argparse
 from .censusgeocode import CensusGeocode
-from .censusgeocode import vintages, benchmarks
 from . import __version__
 
 
 def main():
-    parser = argparse.ArgumentParser('censusgeocode')
+    parser = argparse.ArgumentParser("censusgeocode")
 
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s v' + __version__)
-    parser.add_argument('address', type=str, nargs='?', default=None)
-    parser.add_argument('--csv', type=str, help=(
-        'comma-delimited file of addresses. No header. '
-        'Must have the following columns: id, street address, city, state, zip. '
-        'id must be a unique. '
-        'Read from stdin with -')
+    parser.add_argument("-v", "--version", action="version", version="%(prog)s v" + __version__)
+    parser.add_argument("address", type=str, nargs="?", default=None)
+    parser.add_argument(
+        "--csv",
+        type=str,
+        help=(
+            "comma-delimited file of addresses. No header. Must have the following columns: id, street address, city, state, zip. "
+            "id must be a unique. Read from stdin with -"
+        ),
     )
-    parser.add_argument('--rettype', choices=['locations', 'geographies'],
-        default='locations', help=(
-            'Query type. Geographies will return state, county, tract, '
-            'and block code in addition to TIGER/Line info and '
-            'latitude and longitude. For use with --csv (batch geocoding)')
+    parser.add_argument(
+        "--rettype",
+        choices=["locations", "geographies"],
+        default="locations",
+        help=(
+            "Query type. Geographies will return state, county, tract, and block code in addition to TIGER/Line info and "
+            "latitude and longitude. For use with --csv (batch geocoding)"
+        ),
     )
-    parser.add_argument('--vintage', choices=vintages, default=vintages[0],
-        help='Geography vintage that geographies refer to'
+    parser.add_argument(
+        "--vintage",
+        help="Geography vintage that geographies refer to. See Census documentation for options.",
     )
-    parser.add_argument('--benchmark', choices=benchmarks, default=benchmarks[0],
-        help='Time period Census data (address ranges) refer to'
+    parser.add_argument(
+        "--benchmark",
+        help="Time period Census data (address ranges) refer to. See Census documentation for options",
     )
-    parser.add_argument('--timeout', metavar='SECONDS', type=int, default=12, help='Request timeout [default: 12]')
+    parser.add_argument(
+        "--timeout",
+        metavar="SECONDS",
+        type=int,
+        default=12,
+        help="Request timeout [default: 12]",
+    )
 
     args = parser.parse_args()
     cg = CensusGeocode(benchmark=args.benchmark, vintage=args.vintage)
@@ -55,13 +67,13 @@ def main():
         result = cg.onelineaddress(args.address, returntype=args.rettype, timeout=args.timeout)
 
         try:
-            print('{},{}'.format(result[0]['coordinates']['x'], result[0]['coordinates']['y']))
+            print("{},{}".format(result[0]["coordinates"]["x"], result[0]["coordinates"]["y"]))
 
         except IndexError:
-            print('Address not found'.format(args.address), file=sys.stderr)
+            print("Address not found".format(args.address), file=sys.stderr)
 
     elif args.csv:
-        if args.csv == '-':
+        if args.csv == "-":
             # No streaming here - consume the entirety of stdin.
             infile = io.StringIO()
             csv.writer(infile).writerows(csv.reader(sys.stdin))
@@ -72,14 +84,15 @@ def main():
 
         result = cg.addressbatch(infile, returntype=args.rettype, timeout=args.timeout)
 
-        fieldnames = cg.batchfields[args.rettype] + ['lat', 'lon']
-        fieldnames.pop(fieldnames.index('coordinate'))
+        fieldnames = cg.batchfields[args.rettype] + ["lat", "lon"]
+        fieldnames.pop(fieldnames.index("coordinate"))
         writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(result)
 
     else:
-        print('Address or csv file required')
+        print("Address or csv file required")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

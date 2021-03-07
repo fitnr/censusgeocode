@@ -27,29 +27,6 @@ import requests
 from requests.exceptions import RequestException
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-vintages = [
-    'Current_Current',
-    'Census2010_Current',
-    'ACS2013_Current',
-    'ACS2014_Current',
-    'ACS2015_Current',
-    'ACS2016_Current',
-    'ACS2017_Current',
-    'ACS2018_Current',
-    'Current_ACS2017',
-    'Census2010_ACS2017',
-    'ACS2013_ACS2017',
-    'ACS2014_ACS2017',
-    'ACS2015_ACS2017',
-    'ACS2016_ACS2017',
-    'ACS2017_ACS2017',
-    'ACS2018_ACS2018',
-    'Census2000_Census2010',
-    'Census2010_Census2010',
-]
-
-benchmarks = ['Public_AR_Current', 'Public_AR_ACS2017', 'Public_AR_Census2010']
-
 
 class CensusGeocode(object):
     '''Fetch results from the Census Geocoder'''
@@ -72,8 +49,8 @@ class CensusGeocode(object):
 
         >>> CensusGeocode(benchmark='Public_AR_Current', vintage='Current_Current')
         '''
-        self.benchmark = benchmark or benchmarks[0]
-        self.vintage = vintage or vintages[0]
+        self._benchmark = benchmark
+        self._vintage = vintage
 
     def _geturl(self, searchtype, returntype=None):
         returntype = returntype or self.returntypes[0]
@@ -83,6 +60,7 @@ class CensusGeocode(object):
         '''Fetch a response from the Geocoding API.'''
         fields['vintage'] = self.vintage
         fields['benchmark'] = self.benchmark
+
         fields['format'] = 'json'
 
         if 'layers' in kwargs:
@@ -138,6 +116,20 @@ class CensusGeocode(object):
         }
 
         return self._fetch('onelineaddress', fields, **kwargs)
+
+    def set_benchmark(self, benchmark):
+        self._benchmark = benchmark
+
+    @property
+    def benchmark(self):
+        return getattr(self, '_benchmark')
+
+    def set_vintage(self, vintage):
+        self._vintage = vintage
+
+    @property
+    def vintage(self):
+        return getattr(self, '_vintage')
 
     def _parse_batch_result(self, data, returntype):
         try:

@@ -137,7 +137,7 @@ Queries return a CensusResult object, which is basically a Python list with an e
 By default, the geocoder uses the "Current" vintage and benchmarks. To use another vintage or benchmark, use the `CensusGeocode` class:
 ````python
 import censusgeocode
-cg = censusgeocode.CensusGeocode(benchmark='Public_AR_Census2010', vintage='Census2010_Census2010')
+cg = censusgeocode.CensusGeocode(benchmark='Public_AR_Current', vintage='Census2020_Current')
 cg.onelineaddress(foobar)
 ````
 
