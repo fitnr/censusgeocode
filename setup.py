@@ -32,10 +32,10 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Operating System :: OS Independent',
     ],
     install_requires=[
@@ -44,7 +44,7 @@ setup(
         'six'
     ],
     tests_require=[
-        'vcrpy>=1.11.1, <1.12'
+        'vcrpy>=1.11.1, <1.12',
     ],
     packages=['censusgeocode'],
     test_suite='tests',

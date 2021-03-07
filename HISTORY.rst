@@ -1,3 +1,8 @@
+0.5.0
+-----
+
+* Removed hard-coded benchmarks and vintages, which were out of date. Refer to Census Geocoder documentation for a list of active benchmarks and vintages.
+
 0.4.4
 -----
 
