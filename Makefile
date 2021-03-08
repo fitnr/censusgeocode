@@ -15,7 +15,7 @@ deploy: build
 	twine upload dist/*
 
 build: | clean
-	python3 setup.py bdist_wheel --universal
-	python3 setup.py sdist
+	python setup.py bdist_wheel --universal
+	python setup.py sdist
 
 clean:; rm -rf dist build
