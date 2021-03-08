@@ -13,17 +13,21 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""Command-line interface for censusgeocode"""
 from __future__ import print_function
-import sys
-import io
-import csv
+
 import argparse
-from .censusgeocode import CensusGeocode, DEFAULT_BENCHMARK, DEFAULT_VINTAGE
+import csv
+import io
+import sys
+
 from . import __version__
+from .censusgeocode import DEFAULT_BENCHMARK, DEFAULT_VINTAGE, CensusGeocode
 
 
 def main():
-    parser = argparse.ArgumentParser("censusgeocode")
+    """Command-line interface for censusgeocode"""
+    parser = argparse.ArgumentParser("censusgeocode", description="Command-line interface for the Census Geocoding API")
 
     parser.add_argument("-v", "--version", action="version", version="%(prog)s v" + __version__)
     parser.add_argument("address", type=str, nargs="?", default=None)
@@ -32,7 +36,7 @@ def main():
         type=str,
         help=(
             "comma-delimited file of addresses. No header. Must have the following columns: id, street address, city, state, zip. "
-            "id must be a unique. Read from stdin with -"
+            "The id must be a unique. Read from stdin with -"
         ),
     )
     parser.add_argument(
@@ -41,18 +45,18 @@ def main():
         default="locations",
         help=(
             "Query type. Geographies will return state, county, tract, and block code in addition to TIGER/Line info and "
-            "latitude and longitude. For use with --csv (batch geocoding)"
+            "latitude and longitude. For use with --csv"
         ),
     )
     parser.add_argument(
         "--benchmark",
         default=DEFAULT_BENCHMARK,
-        help="Time period Census data (address ranges) refer to. See Census documentation for options",
+        help="Version of the locator to query. See Census documentation for options.",
     )
     parser.add_argument(
         "--vintage",
         default=DEFAULT_VINTAGE,
-        help="Geography vintage that geographies refer to. See Census documentation for options.",
+        help="Geography version query. See Census documentation for options.",
     )
     parser.add_argument(
         "--timeout",
@@ -72,7 +76,7 @@ def main():
             print("{},{}".format(result[0]["coordinates"]["x"], result[0]["coordinates"]["y"]))
 
         except IndexError:
-            print("Address not found".format(args.address), file=sys.stderr)
+            print("Address not found: {}".format(args.address), file=sys.stderr)
 
     elif args.csv:
         if args.csv == "-":
