@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.12.4]
     method: GET
-    uri: https://geocoding.geo.census.gov/geocoder/locations/address?city=Washington&zip=20500&format=json&state=DC&street=1600+Pennsylvania+Avenue+NW
+    uri: https://geocoding.geo.census.gov/geocoder/locations/address?city=Washington&zip=20500&format=json&state=DC&street=1600+Pennsylvania+Avenue+NW&vintage=Current_Current&benchmark=Public_AR_Current
   response:
     body: {string: !!python/unicode '{"result":{"input":{"address":{"state":"DC","street":"1600
         Pennsylvania Avenue NW","city":"Washington","zip":"20500"},"benchmark":{"id":"4","isDefault":false,"benchmarkName":"Public_AR_Current","benchmarkDescription":"Public

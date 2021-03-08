@@ -18,7 +18,7 @@ import sys
 import io
 import csv
 import argparse
-from .censusgeocode import CensusGeocode
+from .censusgeocode import CensusGeocode, DEFAULT_BENCHMARK, DEFAULT_VINTAGE
 from . import __version__
 
 
@@ -45,12 +45,14 @@ def main():
         ),
     )
     parser.add_argument(
-        "--vintage",
-        help="Geography vintage that geographies refer to. See Census documentation for options.",
+        "--benchmark",
+        default=DEFAULT_BENCHMARK,
+        help="Time period Census data (address ranges) refer to. See Census documentation for options",
     )
     parser.add_argument(
-        "--benchmark",
-        help="Time period Census data (address ranges) refer to. See Census documentation for options",
+        "--vintage",
+        default=DEFAULT_VINTAGE,
+        help="Geography vintage that geographies refer to. See Census documentation for options.",
     )
     parser.add_argument(
         "--timeout",

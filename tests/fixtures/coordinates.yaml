@@ -7,7 +7,7 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: https://geocoding.geo.census.gov/geocoder/geographies/coordinates?format=json&y=43&x=-74
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/coordinates?format=json&y=43&x=-74&vintage=Current_Current&benchmark=Public_AR_Current
   response:
     body: {string: '{"result":{"input":{"location":{"x":-74.0,"y":43.0},"vintage":{"id":"4","vintageName":"Current_Current","isDefault":true,"vintageDescription":"Current
         Vintage - Current Benchmark"},"benchmark":{"id":"4","isDefault":false,"benchmarkName":"Public_AR_Current","benchmarkDescription":"Public

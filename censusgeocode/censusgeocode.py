@@ -28,6 +28,10 @@ from requests.exceptions import RequestException
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 
+DEFAULT_BENCHMARK = 'Public_AR_Current'
+DEFAULT_VINTAGE = 'Current_Current'
+
+
 class CensusGeocode(object):
     '''Fetch results from the Census Geocoder'''
     _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
@@ -49,8 +53,8 @@ class CensusGeocode(object):
 
         >>> CensusGeocode(benchmark='Public_AR_Current', vintage='Current_Current')
         '''
-        self._benchmark = benchmark
-        self._vintage = vintage
+        self._benchmark = benchmark or DEFAULT_BENCHMARK
+        self._vintage = vintage or DEFAULT_VINTAGE
 
     def _geturl(self, searchtype, returntype=None):
         returntype = returntype or self.returntypes[0]

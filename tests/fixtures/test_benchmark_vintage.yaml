@@ -7,11 +7,11 @@ interactions:
       Connection: [keep-alive]
       User-Agent: [python-requests/2.18.4]
     method: GET
-    uri: https://geocoding.geo.census.gov/geocoder/geographies/address?vintage=Census2010_Census2010&street=1600+Pennsylvania+Avenue+NW&state=DC&zip=20500&format=json&benchmark=Public_AR_Census2010&city=Washington
+    uri: https://geocoding.geo.census.gov/geocoder/geographies/address?vintage=Census2020_Current&street=1600+Pennsylvania+Avenue+NW&state=DC&zip=20500&format=json&benchmark=Public_AR_Census2020&city=Washington
   response:
     body: {string: '{"result":{"input":{"address":{"state":"DC","street":"1600 Pennsylvania
-        Avenue NW","zip":"20500","city":"Washington"},"benchmark":{"id":"9","isDefault":false,"benchmarkName":"Public_AR_Census2010","benchmarkDescription":"Public
-        Address Ranges - Census 2010 Benchmark"},"vintage":{"id":"910","isDefault":true,"vintageName":"Census2010_Census2010","vintageDescription":"Census2010
+        Avenue NW","zip":"20500","city":"Washington"},"benchmark":{"id":"9","isDefault":false,"benchmarkName":"Public_AR_Census2020","benchmarkDescription":"Public
+        Address Ranges - Census 2010 Benchmark"},"vintage":{"id":"910","isDefault":true,"vintageName":"Census2020_Current","vintageDescription":"Census2010
         Vintage - Census2010 Benchmark"}},"addressMatches":[{"geographies":{"Census
         Blocks":[{"BLKGRP":"1","UR":"","OID":210403964787808,"FUNCSTAT":"S","STATE":"11","AREAWATER":0,"NAME":"Block
         1036","SUFFIX":"","LSADC":"BK","CENTLON":"-077.0387315","HU100":0,"LWBLKTYP":"L","BLOCK":"1036","BASENAME":"1036","INTPTLAT":"+38.8975764","POP100":0,"MTFCC":"G5040","COUNTY":"001","GEOID":"110010062021036","CENTLAT":"+38.8975764","INTPTLON":"-077.0387315","AREALAND":33422,"OBJECTID":1734550,"TRACT":"006202"}],"Counties":[{"UR":"","OID":27590331264532,"STATE":"11","FUNCSTAT":"F","AREAWATER":18884970,"NAME":"District

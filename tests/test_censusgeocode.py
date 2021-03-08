@@ -66,7 +66,7 @@ class CensusGeoCodeTestCase(unittest.TestCase):
 
     @vcr.use_cassette('tests/fixtures/test_benchmark_vintage.yaml')
     def test_benchmark_vintage(self):
-        bmark, vint = 'Public_AR_Census2010', 'Census2010_Census2010'
+        bmark, vint = 'Public_AR_Census2020', 'Census2020_Current'
 
         cg = CensusGeocode(benchmark=bmark, vintage=vint)
         result = cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500', returntype='geographies')
