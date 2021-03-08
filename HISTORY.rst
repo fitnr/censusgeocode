@@ -1,3 +1,8 @@
+0.5.1
+-----
+
+* Fix empty default values (#23)
+
 0.5.0
 -----
 
