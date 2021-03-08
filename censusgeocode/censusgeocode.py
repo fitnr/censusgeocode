@@ -22,7 +22,7 @@ Accepts either named `lat` and `lng` or x and y inputs.
 """
 import csv
 import io
-from six import string_types
+
 import requests
 from requests.exceptions import RequestException
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -237,8 +237,8 @@ class CensusGeocode:
         if hasattr(data, "read"):
             return self._post_batch(f=data, **kwargs)
 
-        # Check if it's a string file
-        if isinstance(data, string_types):
+        # If it is a string, assume it's a filename
+        if isinstance(data, str):
             with open(data, "rb") as f:
                 return self._post_batch(f=f, **kwargs)
 
