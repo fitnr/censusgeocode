@@ -188,6 +188,22 @@ class CensusGeocode:
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
 
+    
+    @staticmethod
+    def _correct_zipcode_to_zip(args: dict) -> dict:
+        """Coerce the dict key "zipcode" to "zip" to be compatible with the API.
+        
+        The Census API expects a field named "zip", but that is a keyword in Python,
+        so in other places in this library (e.g. `address()`) we use "zipcode" instead.
+        This helper makes the `addressbatch()` function follow the same convention
+        when used with an iterable of dicts.
+        """
+        if "zip" in args and "zipcode" in args:
+            raise ValueError("Only one of 'zip' or 'zipcode' can be used.")
+        return {"zip" if k == "zipcode" else k: v for k, v in args.items()}
+        
+    
+    
     def _post_batch(self, data=None, f=None, **kwargs):
         """Send batch address file to the Census Geocoding API"""
         returntype = kwargs.get("returntype", "geographies")
@@ -198,6 +214,7 @@ class CensusGeocode:
             f = io.StringIO()
             writer = csv.DictWriter(f, fieldnames=["id", "street", "city", "state", "zip"])
             for i, row in enumerate(data):
+                row = self._correct_zipcode_to_zip(row)
                 row.setdefault("id", i)
                 writer.writerow(row)
 
@@ -231,7 +248,8 @@ class CensusGeocode:
         Send either a CSV file or data to the addressbatch API.
         According to the Census, "there is currently an upper limit of 1000 records per batch file."
         If a file, must have no header and fields id,street,city,state,zip
-        If data, should be a list of dicts with the above fields (although ID is optional)
+        If data, should be an iterable of dicts with the above fields (although ID is optional,
+        and you can use "zipcode" instead of "zip".)
         """
         # Does data quack like a file handle?
         if hasattr(data, "read"):
@@ -242,7 +260,7 @@ class CensusGeocode:
             with open(data, "rb") as f:
                 return self._post_batch(f=f, **kwargs)
 
-        # Otherwise, assume a list of dicts
+        # Otherwise, assume an iterable of dicts
         return self._post_batch(data=data, **kwargs)
 
 
