@@ -124,10 +124,10 @@ class CensusGeocode:
     def address(self, street, city=None, state=None, zipcode=None, zip=None, **kwargs):
         """Geocode an address."""
         if "zipcode" is not None:
-            warnings.warn(DeprecationWarning("'zipcode' is deprecated. Use 'zip' instead."))
             if "zip" is not None:
                 raise ValueError("Only one of 'zipcode' or 'zip' can be used.")
-        zip = zipcode
+            warnings.warn(DeprecationWarning("'zipcode' is deprecated. Use 'zip' instead."))
+            zip = zipcode
         fields = {
             "street": street,
             "city": city,
