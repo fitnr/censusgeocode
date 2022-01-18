@@ -193,7 +193,7 @@ class CensusGeocode:
         with io.StringIO(data) as f:
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
-    
+
     def _post_batch(self, data=None, f=None, **kwargs):
         """Send batch address file to the Census Geocoding API"""
         returntype = kwargs.get("returntype", "geographies")
@@ -235,10 +235,13 @@ class CensusGeocode:
     def addressbatch(self, data, **kwargs):
         """
         Send either a CSV file or data to the addressbatch API.
-        According to the Census, "there is currently an upper limit of 1000 records per batch file."
-        If a file, must have no header and fields id,street,city,state,zip
-        If data, should be an iterable of dicts with the above fields (although ID is optional,
-        and you can use "zipcode" instead of "zip".)
+        
+        According to the Census, "there is currently an upper limit of 10,000 records per batch file."
+        
+        If a file, can either be a file-like with a `read()` method, or a `str` that's a path to the
+        file. Either way, it must have no header and have fields id,street,city,state,zip
+        
+        If data, should be an iterable of dicts with the above fields (although ID is optional).
         """
         # Does data quack like a file handle?
         if hasattr(data, "read"):
