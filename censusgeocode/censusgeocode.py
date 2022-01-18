@@ -22,6 +22,7 @@ Accepts either named `lat` and `lng` or x and y inputs.
 """
 import csv
 import io
+import warnings
 
 import requests
 from requests.exceptions import RequestException
@@ -120,13 +121,18 @@ class CensusGeocode:
 
         return self._fetch("coordinates", fields, **kwargs)
 
-    def address(self, street, city=None, state=None, zipcode=None, **kwargs):
+    def address(self, street, city=None, state=None, zipcode=None, zip=None, **kwargs):
         """Geocode an address."""
+        if "zipcode" is not None:
+            warnings.warn(DeprecationWarning("'zipcode' is deprecated. Use 'zip' instead."))
+            if "zip" is not None:
+                raise ValueError("Only one of 'zipcode' or 'zip' can be used.")
+        zip = zipcode
         fields = {
             "street": street,
             "city": city,
             "state": state,
-            "zip": zipcode,
+            "zip": zip,
         }
 
         return self._fetch("address", fields, **kwargs)
@@ -187,22 +193,6 @@ class CensusGeocode:
         with io.StringIO(data) as f:
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
-
-    
-    @staticmethod
-    def _correct_zipcode_to_zip(args: dict) -> dict:
-        """Coerce the dict key "zipcode" to "zip" to be compatible with the API.
-        
-        The Census API expects a field named "zip", but that is a keyword in Python,
-        so in other places in this library (e.g. `address()`) we use "zipcode" instead.
-        This helper makes the `addressbatch()` function follow the same convention
-        when used with an iterable of dicts.
-        """
-        if "zip" in args and "zipcode" in args:
-            raise ValueError("Only one of 'zip' or 'zipcode' can be used.")
-        return {"zip" if k == "zipcode" else k: v for k, v in args.items()}
-        
-    
     
     def _post_batch(self, data=None, f=None, **kwargs):
         """Send batch address file to the Census Geocoding API"""
@@ -214,7 +204,6 @@ class CensusGeocode:
             f = io.StringIO()
             writer = csv.DictWriter(f, fieldnames=["id", "street", "city", "state", "zip"])
             for i, row in enumerate(data):
-                row = self._correct_zipcode_to_zip(row)
                 row.setdefault("id", i)
                 writer.writerow(row)
 
