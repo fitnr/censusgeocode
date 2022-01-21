@@ -19,7 +19,6 @@ Accepts either named `lat` and `lng` or x and y inputs.
 """
 import csv
 import io
-import warnings
 
 import requests
 from requests.exceptions import RequestException
