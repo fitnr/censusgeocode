@@ -1,3 +1,5 @@
+* Accept either "zip" or "zipcode" as an argument in `CensusGeocode.address`.
+
 0.5.1
 -----
 

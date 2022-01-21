@@ -121,18 +121,13 @@ class CensusGeocode:
 
         return self._fetch("coordinates", fields, **kwargs)
 
-    def address(self, street, city=None, state=None, zipcode=None, zip=None, **kwargs):
+    def address(self, street, city=None, state=None, **kwargs):
         """Geocode an address."""
-        if "zipcode" is not None:
-            if "zip" is not None:
-                raise ValueError("Only one of 'zipcode' or 'zip' can be used.")
-            warnings.warn(DeprecationWarning("'zipcode' is deprecated. Use 'zip' instead."))
-            zip = zipcode
         fields = {
             "street": street,
             "city": city,
             "state": state,
-            "zip": zip,
+            "zip": kwargs.get('zip') or kwargs.get('zipcode'),
         }
 
         return self._fetch("address", fields, **kwargs)

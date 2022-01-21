@@ -39,8 +39,14 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert r == 'https://geocoding.geo.census.gov/geocoder/geographies/coordinates'
 
     @vcr.use_cassette('tests/fixtures/address-geographies.yaml')
-    def test_address(self):
+    def test_address_zipcode(self):
         results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500')
+        assert results[0]
+        assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
+
+    @vcr.use_cassette('tests/fixtures/address-geographies.yaml')
+    def test_address_zip(self):
+        results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zip='20500')
         assert results[0]
         assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
 
