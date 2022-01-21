@@ -7,15 +7,14 @@
 
 .PHONY: install build upload clean deploy test
 
-install: ; python setup.py install
+install: ; pip install .
 
-test: ; python setup.py test
+test: ; python -m unittest tests/test_*.py
 
 deploy: build
 	twine upload dist/*
 
 build: | clean
-	python setup.py bdist_wheel --universal
-	python setup.py sdist
+	python -m build
 
 clean:; rm -rf dist build
