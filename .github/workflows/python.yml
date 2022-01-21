@@ -1,0 +1,37 @@
+# This file is part of censusgeocode.
+# https://github.com/fitnr/censusgeocode
+
+# Licensed under the General Public License (version 3)
+# http://opensource.org/licenses/LGPL-3.0
+# Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
+
+name: Install and test python package
+
+on:
+  push:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: setup.cfg
+
+      - name: Install package
+        run: |
+          python -m pip install -U pip
+          pip install '.[tests]'
+
+      - run: make test
