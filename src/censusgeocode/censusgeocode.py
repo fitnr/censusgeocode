@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Copyright (C) 2015-9 Neil Freeman
 
 # This program is free software: you can redistribute it and/or modify
@@ -14,7 +12,6 @@
 
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 """
 Census Geocoder wrapper
 see http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
