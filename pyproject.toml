@@ -2,3 +2,4 @@
 # https://github.com/fitnr/censusgeocode
 [build-system]
 requires = ["setuptools>=60.5.0", "wheel"]
+build-backend = 'setuptools.build_meta'
