@@ -1,4 +1,4 @@
 # This file is part of censusgeocode.
 # https://github.com/fitnr/censusgeocode
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=60.5.0", "wheel"]
