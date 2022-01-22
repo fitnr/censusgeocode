@@ -74,6 +74,7 @@ def main():
 
         except IndexError:
             print("Address not found: {}".format(args.address), file=sys.stderr)
+            sys.exit(1)
 
     elif args.csv:
         if args.csv == "-":
@@ -94,7 +95,7 @@ def main():
         writer.writerows(result)
 
     else:
-        print("Address or csv file required")
+        print("Address or csv file required", file=sys.stderr)
         sys.exit(1)
 
 

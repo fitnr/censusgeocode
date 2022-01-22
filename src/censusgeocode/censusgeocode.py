@@ -14,11 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 Census Geocoder wrapper
-see http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
-Accepts either named `lat` and `lng` or x and y inputs.
+For details on the API, see:
+http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
 """
 import csv
 import io
+import warnings
 
 import requests
 from requests.exceptions import RequestException
@@ -140,24 +141,24 @@ class CensusGeocode:
 
     def set_benchmark(self, benchmark):
         """Set the Census Geocoding API benchmark the class will use.
-        See https://geocoding.geo.census.gov/geocoder/vintages?form for more."""
+        See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._benchmark = benchmark
 
     @property
     def benchmark(self):
         """Give the Census Geocoding API benchmark the class is using.
-        See https://geocoding.geo.census.gov/geocoder/benchmarks for more."""
+        See: https://geocoding.geo.census.gov/geocoder/benchmarks"""
         return getattr(self, "_benchmark")
 
     def set_vintage(self, vintage):
         """Set the Census Geocoding API vintage the class will use.
-        See https://geocoding.geo.census.gov/geocoder/vintages?form for more."""
+        See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._vintage = vintage
 
     @property
     def vintage(self):
         """Give the Census Geocoding API vintage the class is using.
-        See https://geocoding.geo.census.gov/geocoder/vintages?form for more."""
+        See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         return getattr(self, "_vintage")
 
     def _parse_batch_result(self, data, returntype):
@@ -190,13 +191,15 @@ class CensusGeocode:
         returntype = kwargs.get("returntype", "geographies")
         url = self._geturl("addressbatch", returntype)
 
-        if data is not None:
+        if data:
             # For Python 3, compile data into a StringIO
             f = io.StringIO()
             writer = csv.DictWriter(f, fieldnames=["id", "street", "city", "state", "zip"])
-            for i, row in enumerate(data):
+            for i, row in enumerate(data, 1):
                 row.setdefault("id", i)
                 writer.writerow(row)
+                if i == 10001:
+                    warnings.warn("Sending more than 10,000 records, the upper limit for the Census Geocoder. Request will likely fail")
 
             f.seek(0)
 
@@ -226,12 +229,12 @@ class CensusGeocode:
     def addressbatch(self, data, **kwargs):
         """
         Send either a CSV file or data to the addressbatch API.
-        
+
         According to the Census, "there is currently an upper limit of 10,000 records per batch file."
-        
+
         If a file, can either be a file-like with a `read()` method, or a `str` that's a path to the
         file. Either way, it must have no header and have fields id,street,city,state,zip
-        
+
         If data, should be an iterable of dicts with the above fields (although ID is optional).
         """
         # Does data quack like a file handle?
@@ -250,8 +253,6 @@ class CensusGeocode:
 class GeographyResult(dict):
 
     """Wrapper for geography objects returned by the Census Geocoding API"""
-
-    _coordkeys = ("CENTLON", "CENTLAT", "INTPTLON", "INTPTLAT")
 
     def __init__(self, data):
         self.input = data["result"].get("input", {})

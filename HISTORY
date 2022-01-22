@@ -1,6 +1,7 @@
 0.5.2
 -----
 * Accept either "zip" or "zipcode" as an argument in `CensusGeocode.address` (#24).
+* Add warning to `CensusGeocode.batch()` when trying send more than 10,000 records
 * Move packaging metadata to setup.cfg and pyproject.toml
 * Use github actions for automated tests
 
