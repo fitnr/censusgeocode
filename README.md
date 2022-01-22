@@ -1,9 +1,9 @@
 Census Geocode
 --------------
 
-Census Geocode is a light weight Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with both Python 2 and 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude, or a batch file into a parsed address and coordinates.
+Census Geocode is a light weight Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with  Python 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude, or a batch file into a parsed address and coordinates.
 
-It's strongly recommended to review the [Census Geocoder docs](https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf) before using this module.
+It's strongly recommended to review the [Census Geocoder docs](https://www.census.gov/programs-surveys/geography/technical-documentation/complete-technical-documentation/census-geocoder.html) before using this module.
 
 Basic example:
 
@@ -12,7 +12,7 @@ import censusgeocode as cg
 
 cg.coordinates(x=-76, y=41)
 cg.onelineaddress('1600 Pennsylvania Avenue, Washington, DC')
-cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zipcode='20006')
+cg.address('1600 Pennsylvania Avenue', city='Washington', state='DC', zip='20006')
 cg.addressbatch('data/addresses.csv')
 ```
 
@@ -70,18 +70,7 @@ Queries return a CensusResult object, which is basically a Python list with an e
         'TRACT': '216600'
     }],
     'Census Tracts': [{
-        'AREALAND': 86404594,
-        'AREAWATER': 650526,
-        'BASENAME': '2166',
-        'CENTLAT': '+41.0361462',
-        'CENTLON': '-075.9801252',
-        'COUNTY': '079',
-        'FUNCSTAT': 'S',
-        'GEOID': '42079216600',
-        'INTPTLAT': '+41.0379841',
-        'INTPTLON': '-075.9743749',
-        'LSADC': 'CT',
-        'MTFCC': 'G5020',
+        # snip 
         'NAME': 'Census Tract 2166',
         'OBJECTID': 61245,
         'OID': 20790277158250,
@@ -89,41 +78,15 @@ Queries return a CensusResult object, which is basically a Python list with an e
         'TRACT': '216600'
     }],
     'Counties': [{
-        'AREALAND': 2305974186,
-        'AREAWATER': 41240020,
-        'BASENAME': 'Luzerne',
-        'CENTLAT': '+41.1768961',
-        'CENTLON': '-075.9890400',
-        'COUNTY': '079',
-        'COUNTYCC': 'H1',
-        'COUNTYNS': '01209183',
-        'FUNCSTAT': 'A',
-        'GEOID': '42079',
-        'INTPTLAT': '+41.1727868',
-        'INTPTLON': '-075.9760345',
-        'LSADC': '06',
-        'MTFCC': 'G4020',
+        # snip
         'NAME': 'Luzerne County',
         'OBJECTID': 866,
         'OID': 27590277115518,
         'STATE': '42'
     }],
     'States': [{
-        'AREALAND': 115884236236,
-        'AREAWATER': 3395797284,
-        'BASENAME': 'Pennsylvania',
-        'CENTLAT': '+40.9011252',
-        'CENTLON': '-077.8369164',
-        'DIVISION': '2',
-        'FUNCSTAT': 'A',
-        'GEOID': '42',
-        'INTPTLAT': '+40.9024957',
-        'INTPTLON': '-077.8334514',
-        'LSADC': '00',
-        'MTFCC': 'G4000',
+        # snip
         'NAME': 'Pennsylvania',
-        'OBJECTID': 37,
-        'OID': 27490163788605,
         'REGION': '1',
         'STATE': '42',
         'STATENS': '01779798',
@@ -136,8 +99,8 @@ Queries return a CensusResult object, which is basically a Python list with an e
 
 By default, the geocoder uses the "Current" vintage and benchmarks. To use another vintage or benchmark, use the `CensusGeocode` class:
 ````python
-import censusgeocode
-cg = censusgeocode.CensusGeocode(benchmark='Public_AR_Current', vintage='Census2020_Current')
+from censusgeocode import CensusGeocode
+cg = CensusGeocode(benchmark='Public_AR_Current', vintage='Census2020_Current')
 cg.onelineaddress(foobar)
 ````
 
@@ -175,7 +138,7 @@ censusgeocode --csv tests/fixtures/batch.csv
 
 Or from stdin, using `-` as the filename:
 ````
-cat tests/fixtures/batch.csv | censusgeocode --csv -
+head tests/fixtures/batch.csv | censusgeocode --csv -
 ````
 
 According to the Census docs, the batch geocoder is limited to 10,000 rows.

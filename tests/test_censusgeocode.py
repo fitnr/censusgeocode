@@ -1,6 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+"""Tests for censusgeocode"""
 # This file is part of censusgeocode.
 # https://github.com/fitnr/censusgeocode
 
@@ -10,6 +9,8 @@
 
 import unittest
 import vcr
+import warnings
+
 from censusgeocode import CensusGeocode
 from censusgeocode.censusgeocode import AddressResult, GeographyResult
 
@@ -39,8 +40,14 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert r == 'https://geocoding.geo.census.gov/geocoder/geographies/coordinates'
 
     @vcr.use_cassette('tests/fixtures/address-geographies.yaml')
-    def test_address(self):
+    def test_address_zipcode(self):
         results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zipcode='20500')
+        assert results[0]
+        assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
+
+    @vcr.use_cassette('tests/fixtures/address-geographies.yaml')
+    def test_address_zip(self):
+        results = self.cg.address('1600 Pennsylvania Avenue NW', city='Washington', state='DC', zip='20500')
         assert results[0]
         assert results[0]['geographies']['Counties'][0]['BASENAME'] == 'District of Columbia'
 
@@ -66,6 +73,7 @@ class CensusGeoCodeTestCase(unittest.TestCase):
 
     @vcr.use_cassette('tests/fixtures/test_benchmark_vintage.yaml')
     def test_benchmark_vintage(self):
+        """Initializing CensuGeocode with benchmark and vintage keywords works"""
         bmark, vint = 'Public_AR_Census2020', 'Census2020_Current'
 
         cg = CensusGeocode(benchmark=bmark, vintage=vint)
@@ -77,6 +85,7 @@ class CensusGeoCodeTestCase(unittest.TestCase):
 
     @vcr.use_cassette('tests/fixtures/address-batch.yaml')
     def test_addressbatch(self):
+        """batch() function works"""
         result = self.cg.addressbatch('tests/fixtures/batch.csv', returntype='locations')
         assert isinstance(result, list)
         resultdict = {int(r['id']): r for r in result}
@@ -89,3 +98,12 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert resultdict[3]['tigerlineid'] == '59653655'
         assert resultdict[3]['statefp'] == '36'
         assert resultdict[2]['match'] is False
+
+    def test_warning10k(self):
+        """Sending more than 10,000 records to batch raises a warning"""
+        warnings.simplefilter("error")
+        data = ({} for _ in range(10001))
+        result = []
+        with self.assertRaises(UserWarning, msg="Get a warning when sending more than 10k rows to batch()"):
+            result = self.cg.addressbatch(data)
+        self.assertEqual(result, [], "Result is empty")

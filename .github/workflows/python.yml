@@ -1,0 +1,66 @@
+# This file is part of censusgeocode.
+# https://github.com/fitnr/censusgeocode
+
+# Licensed under the General Public License (version 3)
+# http://opensource.org/licenses/LGPL-3.0
+# Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
+
+name: Test and deploy
+
+on:
+  push:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+          cache: 'pip'
+          cache-dependency-path: setup.cfg
+
+      - name: Install package
+        run: |
+          python -m pip install -U pip
+          pip install '.[tests]'
+
+      - run: make test
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    environment: production
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+          cache-dependency-path: setup.cfg
+
+      - name: Install build requirements
+        run: |
+          python -m pip install -U pip
+          pip install build
+
+      - run: make build
+
+      - name: Publish package
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

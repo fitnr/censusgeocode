@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # This file is part of censusgeocode.
@@ -10,7 +9,7 @@
 
 from .censusgeocode import CensusGeocode
 
-__version__ = '0.5.1'
+__version__ = '0.5.2'
 
 cg = CensusGeocode()
 

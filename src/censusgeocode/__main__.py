@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Copyright (C) 2015-7 Neil Freeman
 
 # This program is free software: you can redistribute it and/or modify
@@ -14,8 +13,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """Command-line interface for censusgeocode"""
-from __future__ import print_function
-
 import argparse
 import csv
 import io
@@ -77,6 +74,7 @@ def main():
 
         except IndexError:
             print("Address not found: {}".format(args.address), file=sys.stderr)
+            sys.exit(1)
 
     elif args.csv:
         if args.csv == "-":
@@ -97,7 +95,8 @@ def main():
         writer.writerows(result)
 
     else:
-        print("Address or csv file required")
+        print("Address or csv file required", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
