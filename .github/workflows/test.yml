@@ -1,35 +1,228 @@
-# This file is part of censusgeocode.
-# https://github.com/fitnr/censusgeocode
-
-# Licensed under the General Public License (version 3)
-# http://opensource.org/licenses/LGPL-3.0
-# Copyright (c) 2015-7, Neil Freeman <contact@fakeisthenewreal.org>
-
 name: Test package
 
 on:
   push:
+    branches:
+      - main
+      - master
   pull_request:
-    branches: [master]
+  schedule:
+    - cron: 0 0 * * 1
+  workflow_dispatch:
+
+permissions: read-all
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  pytest:
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        python: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python-version:
+          - '3.9'
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    permissions:
+      contents: write
 
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
         with:
-          python-version: ${{ matrix.python }}
-          cache: 'pip'
-          cache-dependency-path: setup.cfg
+          disable-sudo: true
+          egress-policy: audit
 
-      - name: Install package
-        run: pip install .[tests]
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
 
-      - run: make test
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - uses: install-pinned/uv@f20d06082e3ca3f1bfcf8215fa2cf078ef62dd30
+
+      - run: |
+          uv pip install --system .[tests]
+
+      - id: cache-pytest
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: .pytest_cache
+          key: pytest-${{ matrix.python-version }}-${{ matrix.os }}-${{ hashFiles('setup.cfg') }}
+
+      - run: pytest
+        env:
+          COVERAGE_FILE: ".coverage.${{ matrix.os }}.${{ matrix.python-version }}"
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          path: .coverage.${{ matrix.os }}.${{ matrix.python-version }}}
+          include-hidden-files: true
+
+  ruff-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            files.pythonhosted.org:443
+            github.com:443
+            pypi.org:443
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: 3.13
+          cache: pip
+
+      - uses: install-pinned/uv@f20d06082e3ca3f1bfcf8215fa2cf078ef62dd30
+
+      - run: uv pip install --system .[tests]
+
+      - id: cache-ruff
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: .ruff_cache
+          key: ruff-${{ hashFiles('setup.cfg') }}
+
+      - id: run-ruff
+        run: ruff format --diff .
+
+  ruff-check:
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+
+    steps:
+      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            files.pythonhosted.org:443
+            github.com:443
+            pypi.org:443
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: 3.13
+          cache: pip
+
+      - uses: install-pinned/uv@f20d06082e3ca3f1bfcf8215fa2cf078ef62dd30
+
+      - run: uv pip install --system .[tests]
+
+      - id: cache-ruff
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: .ruff_cache
+          key: ruff-${{ hashFiles('setup.cfg') }}
+
+      - id: run-ruff-sarif
+        run: |
+          ruff check --output-format=sarif -o results.sarif .
+
+      - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee
+        if: ( success() || failure() ) && contains('["success", "failure"]', steps.run-ruff-sarif.outcome)
+        with:
+          sarif_file: results.sarif
+
+      - id: run-ruff
+        if: failure() && contains('["failure"]', steps.run-ruff-sarif.outcome)
+        run: |
+          ruff check --output-format=github .
+
+  bandit:
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+
+    steps:
+      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            files.pythonhosted.org:443
+            github.com:443
+            pypi.org:443
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c
+        with:
+          python-version: 3.13
+          cache: pip
+
+      - uses: install-pinned/uv@f20d06082e3ca3f1bfcf8215fa2cf078ef62dd30
+
+      - run: uv pip install --system .[tests]
+
+      - id: run-bandit-sarif
+        run: |
+          bandit --confidence-level 'medium' --severity-level 'medium' --recursive 'src' --format 'sarif' --output 'results.sarif'
+
+      - uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee
+        if: ( success() || failure() ) && contains('["success", "failure"]', steps.run-bandit-sarif.outcome)
+        with:
+          sarif_file: results.sarif
+
+      - id: run-bandit
+        if: failure() && contains('["failure"]', steps.run-bandit-sarif.outcome)
+        run: |
+          bandit --confidence-level 'medium' --severity-level 'medium' --recursive 'src'
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: pytest
+
+    permissions:
+      pull-requests: write
+      contents: write
+
+    steps:
+      - uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            img.shields.io:443
+
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
+        with:
+          pattern: coverage-*
+          merge-multiple: true
+
+      - id: coverage_comment
+        uses: py-cov-action/python-coverage-comment-action@e623398c19eb3853a5572d4a516e10b15b5cefbc
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_COVERAGE_FILES: true
+
+      - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        if: steps.coverage_comment.outputs.COMMENT_FILE_WRITTEN == 'true'
+        with:
+          name: python-coverage-comment-action
+          path: python-coverage-comment-action.txt
