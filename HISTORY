@@ -1,3 +1,7 @@
+0.5.3
+-----
+* Remove upper version limits on requests-toolbelt, requests, and vcrpy (used only for testing)
+
 0.5.2
 -----
 * Accept either "zip" or "zipcode" as an argument in `CensusGeocode.address` (#24).
