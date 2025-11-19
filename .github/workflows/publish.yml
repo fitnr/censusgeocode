@@ -10,9 +10,15 @@ on:
   release:
     types: [created]
 
+permissions: read-all
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
+
     steps:
       - uses: actions/checkout@v5
 
