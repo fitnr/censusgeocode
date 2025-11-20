@@ -20,6 +20,7 @@ permissions: read-all
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         python:
           - '3.7'
