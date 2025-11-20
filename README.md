@@ -1,4 +1,7 @@
-Census Geocode
+[![Test package](https://github.com/fitnr/censusgeocode/actions/workflows/test.yml/badge.svg)](https://github.com/fitnr/censusgeocode/actions/workflows/test.yml)
+
+# Census Geocode
+
 --------------
 
 Census Geocode is a light weight Python wrapper for the US Census [Geocoder API](http://geocoding.geo.census.gov/geocoder/), compatible with  Python 3. It comes packaged with a simple command line tool for geocoding an address to a longitude and latitude, or a batch file into a parsed address and coordinates.
@@ -95,7 +98,7 @@ Queries return a CensusResult object, which is basically a Python list with an e
 }]
 ```
 
-### Advanced
+## Advanced
 
 By default, the geocoder uses the "Current" vintage and benchmarks. To use another vintage or benchmark, use the `CensusGeocode` class:
 ````python
