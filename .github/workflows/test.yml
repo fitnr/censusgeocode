@@ -9,8 +9,13 @@ name: Test package
 
 on:
   push:
+    branches:
+      - master
+      - main
   pull_request:
-    branches: [master]
+    branches:
+      - master
+      - main
   schedule:
     - cron: 0 0 * * 1
   workflow_dispatch:
