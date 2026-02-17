@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Tests for censusgeocode"""
 # This file is part of censusgeocode.
 # https://github.com/fitnr/censusgeocode
