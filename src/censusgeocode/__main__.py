@@ -1,4 +1,4 @@
-# Copyright (C) 2015-7 Neil Freeman
+# Copyright (c) 2015-2026, Neil Freeman <contact@fakeisthenewreal.org>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """Command-line interface for censusgeocode"""
+
 import argparse
 import csv
 import io
@@ -73,7 +74,7 @@ def main():
             print("{},{}".format(result[0]["coordinates"]["x"], result[0]["coordinates"]["y"]))
 
         except IndexError:
-            print("Address not found: {}".format(args.address), file=sys.stderr)
+            print(f"Address not found: {args.address}", file=sys.stderr)
             sys.exit(1)
 
     elif args.csv:

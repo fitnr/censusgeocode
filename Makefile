@@ -3,18 +3,36 @@
 
 # Licensed under the General Public License (version 3)
 # http://opensource.org/licenses/LGPL-3.0
-# Copyright (c) 2015-9, Neil Freeman <contact@fakeisthenewreal.org>
+# Copyright (c) 2015-2026, Neil Freeman <contact@fakeisthenewreal.org>
 
-.PHONY: install build upload clean deploy test
+PYTHON = python3
+PIP = $(PYTHON) -m pip
+BUILD = $(PYTHON) -m build
+TWINE = $(PYTHON) -m twine
 
-install: ; pip install .
+.PHONY: help install dev-install test lint format build upload clean
 
-test: ; python -m unittest tests/test_*.py
+help:
+	@echo "Usage: make [target]"
+	@echo "  install      Install the package"
+	@echo "  test         Run unit tests"
+	@echo "  build        Create source and wheel distributions"
+	@echo "  upload       Upload to PyPI using Twine"
+	@echo "  clean        Remove build artifacts"
 
-deploy: build
-	twine upload dist/*
+install:
+	$(PIP) install .
 
-build: | clean
-	python -m build
+test:
+	$(PIP) install -e ".[test]"
+	$(PYTHON) -m unittest discover tests/ "test_*.py"
 
-clean:; rm -rf dist build
+build: clean
+	$(BUILD)
+
+upload: build
+	$(TWINE) upload dist/*
+
+clean:
+	rm -rf dist/ build/ *.egg-info .ruff_cache
+	find . -type d -name "__pycache__" -exec rm -rf {} +

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # This file is part of censusgeocode.
 # https://github.com/fitnr/censusgeocode
 
@@ -9,7 +7,7 @@
 
 from .censusgeocode import CensusGeocode
 
-__version__ = '0.5.3'
+__version__ = "0.5.3"
 
 cg = CensusGeocode()
 
