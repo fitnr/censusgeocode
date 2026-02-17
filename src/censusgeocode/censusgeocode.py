@@ -21,21 +21,22 @@ https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
 import csv
 import io
 import warnings
+from io import BufferedReader
+from pathlib import Path
+from typing import Literal, TextIO
 
 import requests
-from requests.exceptions import RequestException
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-
-DEFAULT_BENCHMARK = "Public_AR_Current"
-DEFAULT_VINTAGE = "Current_Current"
+SearchType = Literal["onelineaddress", "address", "addressPR", "addressbatch", "coordinates"]
+ReturnType = Literal["geographies", "locations"]
+ResultType = dict[str, str | int | float]
 
 
 class CensusGeocode:
     """Fetch results from the Census Geocoder"""
 
     _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
-    returntypes = ["geographies", "locations"]
 
     batchfields = {
         "locations": [
@@ -64,7 +65,7 @@ class CensusGeocode:
         ],
     }
 
-    def __init__(self, benchmark=None, vintage=None):
+    def __init__(self, benchmark: str = "Public_AR_Current", vintage: str = "Current_Current"):
         """
         Arguments:
             benchmark (str): A name that references the version of the locator to use.
@@ -74,15 +75,24 @@ class CensusGeocode:
 
         >>> CensusGeocode(benchmark="Public_AR_Current", vintage="Current_Current")
         """
-        self._benchmark = benchmark or DEFAULT_BENCHMARK
-        self._vintage = vintage or DEFAULT_VINTAGE
+        self._benchmark = benchmark
+        self._vintage = vintage
 
-    def _geturl(self, searchtype, returntype=None):
+    def _geturl(self, searchtype: SearchType, returntype: ReturnType = "geographies") -> str:
         """Construct an URL for the geocoder."""
-        returntype = returntype or self.returntypes[0]
         return self._url.format(returntype=returntype, searchtype=searchtype)
 
-    def _fetch(self, searchtype, fields, **kwargs):
+    def _fetch(
+        self,
+        searchtype: SearchType,
+        fields: dict[
+            Literal["vintage", "benchmark", "layers", "format", "x", "y", "address", "street", "city", "state", "zip"],
+            str | float,
+        ],
+        *,
+        returntype: ReturnType = "geographies",
+        **kwargs,
+    ) -> list | dict:
         """Fetch a response from the Geocoding API."""
         fields["vintage"] = self.vintage
         fields["benchmark"] = self.benchmark
@@ -92,8 +102,7 @@ class CensusGeocode:
         if "layers" in kwargs:
             fields["layers"] = kwargs["layers"]
 
-        returntype = kwargs.get("returntype", "geographies")
-        url = self._geturl(searchtype, returntype)
+        url = self._geturl(searchtype=searchtype, returntype=returntype)
 
         try:
             with requests.get(url, params=fields, timeout=kwargs.get("timeout")) as r:
@@ -109,60 +118,65 @@ class CensusGeocode:
         except (ValueError, KeyError):
             raise ValueError("Unable to parse response from Census")
 
-        except RequestException as err:
-            raise err
-
-    def coordinates(self, x, y, **kwargs):
+    def coordinates(self, x: float, y: float, *, returntype: ReturnType = "geographies", **kwargs) -> list | dict:
         """Geocode a (lon, lat) coordinate."""
-        kwargs["returntype"] = "geographies"
-        fields = {"x": x, "y": y}
+        fields: dict[Literal["x", "y"], float] = {"x": x, "y": y}
 
-        return self._fetch("coordinates", fields, **kwargs)
+        return self._fetch("coordinates", fields=fields, returntype=returntype, **kwargs)
 
-    def address(self, street, city=None, state=None, **kwargs):
+    def address(
+        self,
+        street: str,
+        city: str | None = None,
+        state: str | None = None,
+        *,
+        zip: str | None = None,
+        zipcode: str | None = None,
+        **kwargs,
+    ) -> list | dict:
         """Geocode an address."""
-        fields = {
+        fields: dict[Literal["street", "city", "state", "zip"], str] = {
             "street": street,
             "city": city,
             "state": state,
-            "zip": kwargs.get("zip") or kwargs.get("zipcode"),
+            "zip": zip or zipcode,
         }
 
-        return self._fetch("address", fields, **kwargs)
+        return self._fetch(searchtype="address", fields=fields, **kwargs)
 
-    def onelineaddress(self, address, **kwargs):
+    def onelineaddress(self, address: str, **kwargs) -> list | dict:
         """Geocode an an address passed as one string.
         e.g. "4600 Silver Hill Rd, Suitland, MD 20746"
         """
-        fields = {
+        fields: dict[Literal["address"], str] = {
             "address": address,
         }
 
-        return self._fetch("onelineaddress", fields, **kwargs)
+        return self._fetch(searchtype="onelineaddress", fields=fields, **kwargs)
 
-    def set_benchmark(self, benchmark):
+    def set_benchmark(self, benchmark) -> None:
         """Set the Census Geocoding API benchmark the class will use.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._benchmark = benchmark
 
     @property
-    def benchmark(self):
+    def benchmark(self) -> str:
         """Give the Census Geocoding API benchmark the class is using.
         See: https://geocoding.geo.census.gov/geocoder/benchmarks"""
         return getattr(self, "_benchmark")
 
-    def set_vintage(self, vintage):
+    def set_vintage(self, vintage) -> None:
         """Set the Census Geocoding API vintage the class will use.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._vintage = vintage
 
     @property
-    def vintage(self):
+    def vintage(self) -> str:
         """Give the Census Geocoding API vintage the class is using.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         return getattr(self, "_vintage")
 
-    def _parse_batch_result(self, data, returntype):
+    def _parse_batch_result(self, data: str, returntype: ReturnType) -> list[ResultType]:
         """Parse the batch address results returned from the Census Geocoding API"""
         try:
             fieldnames = self.batchfields[returntype]
@@ -175,7 +189,7 @@ class CensusGeocode:
             if row["coordinate"]:
                 try:
                     row["lon"], row["lat"] = tuple(float(a) for a in row["coordinate"].split(","))
-                except:
+                except ValueError:
                     pass
 
             del row["coordinate"]
@@ -187,13 +201,21 @@ class CensusGeocode:
             reader = csv.DictReader(f, fieldnames=fieldnames)
             return [parse(row) for row in reader]
 
-    def _post_batch(self, data=None, f=None, **kwargs):
+    def _post_batch(
+        self,
+        data: list[dict] | None = None,
+        f: TextIO | BufferedReader | None = None,
+        *,
+        returntype: ReturnType = "geographies",
+        **kwargs,
+    ) -> list[ResultType]:
         """Send batch address file to the Census Geocoding API"""
-        returntype = kwargs.get("returntype", "geographies")
-        url = self._geturl("addressbatch", returntype)
+        url = self._geturl(searchtype="addressbatch", returntype=returntype)
+
+        if not data and f is None:
+            raise ValueError("Need either data or a file for CensusGeocode.addressbatch")
 
         if data:
-            # For Python 3, compile data into a StringIO
             f = io.StringIO()
             writer = csv.DictWriter(f, fieldnames=["id", "street", "city", "state", "zip"])
             for i, row in enumerate(data, 1):
@@ -205,9 +227,6 @@ class CensusGeocode:
                     )
 
             f.seek(0)
-
-        elif f is None:
-            raise ValueError("Need either data or a file for CensusGeocode.addressbatch")
 
         try:
             form = MultipartEncoder(
@@ -223,13 +242,10 @@ class CensusGeocode:
                 # return as list of dicts
                 return self._parse_batch_result(r.text, returntype)
 
-        except RequestException as err:
-            raise err
-
         finally:
             f.close()
 
-    def addressbatch(self, data, **kwargs):
+    def addressbatch(self, data: TextIO | str | Path | list[dict], **kwargs) -> list[ResultType]:
         """
         Send either a CSV file or data to the addressbatch API.
 
@@ -244,6 +260,11 @@ class CensusGeocode:
         if hasattr(data, "read"):
             return self._post_batch(f=data, **kwargs)
 
+        # If it is a Path object open the file as bytes
+        if isinstance(data, Path):
+            with data.open("rb") as f:
+                return self._post_batch(f=f, **kwargs)
+
         # If it is a string, assume it's a filename
         if isinstance(data, str):
             with open(data, "rb") as f:
@@ -256,7 +277,7 @@ class CensusGeocode:
 class GeographyResult(dict):
     """Wrapper for geography objects returned by the Census Geocoding API"""
 
-    def __init__(self, data):
+    def __init__(self, data: dict[str, ResultType]) -> None:
         self.input = data["result"].get("input", {})
         super().__init__(data["result"]["geographies"])
 
@@ -277,6 +298,6 @@ class GeographyResult(dict):
 class AddressResult(list):
     """Wrapper for address objects returned by the Census Geocoding API"""
 
-    def __init__(self, data):
+    def __init__(self, data: dict[str, ResultType]) -> None:
         self.input = data["result"].get("input", {})
         super().__init__(data["result"]["addressMatches"])
