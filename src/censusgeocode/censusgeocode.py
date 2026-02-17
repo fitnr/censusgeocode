@@ -155,7 +155,7 @@ class CensusGeocode:
 
         return self._fetch(searchtype="onelineaddress", fields=fields, **kwargs)
 
-    def set_benchmark(self, benchmark) -> None:
+    def set_benchmark(self, benchmark: str) -> None:
         """Set the Census Geocoding API benchmark the class will use.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._benchmark = benchmark
@@ -166,7 +166,7 @@ class CensusGeocode:
         See: https://geocoding.geo.census.gov/geocoder/benchmarks"""
         return getattr(self, "_benchmark")
 
-    def set_vintage(self, vintage) -> None:
+    def set_vintage(self, vintage: str) -> None:
         """Set the Census Geocoding API vintage the class will use.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
         self._vintage = vintage
