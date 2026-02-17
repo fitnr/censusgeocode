@@ -12,7 +12,7 @@ import vcr
 import warnings
 
 from censusgeocode import CensusGeocode
-from censusgeocode.censusgeocode import AddressResult, GeographyResult
+from censusgeocode.censusgeocode import GeographyResult
 
 
 class CensusGeoCodeTestCase(unittest.TestCase):
