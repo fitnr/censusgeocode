@@ -214,7 +214,7 @@ class CensusGeocode:
         """Send batch address file to the Census Geocoding API"""
         url = self._geturl(searchtype="addressbatch", returntype=returntype)
 
-        if not (data or f):
+        if data is None and f is None:
             err_msg = "Need either data or a file for CensusGeocode.addressbatch"
             raise ValueError(err_msg)
 
