@@ -17,6 +17,7 @@ Census Geocoder wrapper
 For details on the API, see:
 http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
 """
+
 import csv
 import io
 import warnings
@@ -71,7 +72,7 @@ class CensusGeocode:
             vintage (str): The geography part of the desired vintage.
                 See: https://geocoding.geo.census.gov/geocoder/vintages?form
 
-        >>> CensusGeocode(benchmark='Public_AR_Current', vintage='Current_Current')
+        >>> CensusGeocode(benchmark="Public_AR_Current", vintage="Current_Current")
         """
         self._benchmark = benchmark or DEFAULT_BENCHMARK
         self._vintage = vintage or DEFAULT_VINTAGE
@@ -124,7 +125,7 @@ class CensusGeocode:
             "street": street,
             "city": city,
             "state": state,
-            "zip": kwargs.get('zip') or kwargs.get('zipcode'),
+            "zip": kwargs.get("zip") or kwargs.get("zipcode"),
         }
 
         return self._fetch("address", fields, **kwargs)
@@ -199,7 +200,9 @@ class CensusGeocode:
                 row.setdefault("id", i)
                 writer.writerow(row)
                 if i == 10001:
-                    warnings.warn("Sending more than 10,000 records, the upper limit for the Census Geocoder. Request will likely fail")
+                    warnings.warn(
+                        "Sending more than 10,000 records, the upper limit for the Census Geocoder. Request will likely fail"
+                    )
 
             f.seek(0)
 
@@ -251,7 +254,6 @@ class CensusGeocode:
 
 
 class GeographyResult(dict):
-
     """Wrapper for geography objects returned by the Census Geocoding API"""
 
     def __init__(self, data):
@@ -273,7 +275,6 @@ class GeographyResult(dict):
 
 
 class AddressResult(list):
-
     """Wrapper for address objects returned by the Census Geocoding API"""
 
     def __init__(self, data):
