@@ -15,7 +15,7 @@
 """
 Census Geocoder wrapper
 For details on the API, see:
-http://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
+https://geocoding.geo.census.gov/geocoder/Geocoding_Services_API.pdf
 """
 
 import csv
