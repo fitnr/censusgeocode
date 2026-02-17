@@ -208,6 +208,7 @@ class CensusGeocode:
         data: list[dict] | None = None,
         f: TextIO | BufferedReader | None = None,
         *,
+        leave_open: bool = False,
         returntype: ReturnType = "geographies",
         **kwargs,
     ) -> list[ResultType]:
@@ -246,7 +247,8 @@ class CensusGeocode:
                 return self._parse_batch_result(r.text, returntype)
 
         finally:
-            f.close()
+            if not leave_open:
+                f.close()
 
     def addressbatch(self, data: TextIO | str | Path | list[dict], **kwargs) -> list[ResultType]:
         """
@@ -261,20 +263,15 @@ class CensusGeocode:
         """
         # Does data quack like a file handle?
         if hasattr(data, "read"):
-            return self._post_batch(f=data, **kwargs)
+            return self._post_batch(f=data, leave_open=True, **kwargs)
 
-        # If it is a Path object open the file as bytes
-        if isinstance(data, Path):
-            with data.open("rb") as f:
-                return self._post_batch(f=f, **kwargs)
-
-        # If it is a string, assume it's a filename
-        if isinstance(data, str):
-            with open(data, "rb") as f:
-                return self._post_batch(f=f, **kwargs)
+        # If it is a Path object or string, open the file as bytes
+        if isinstance(data, (str, Path)):
+            f = open(data, "rb")  # No 'with' block here
+            return self._post_batch(f=f, leave_open=False, **kwargs)
 
         # Otherwise, assume an iterable of dicts
-        return self._post_batch(data=data, **kwargs)
+        return self._post_batch(data=data, leave_open=False, **kwargs)
 
 
 class GeographyResult(dict):

@@ -1,4 +1,3 @@
-
 # This file is part of censusgeocode.
 # https://github.com/fitnr/censusgeocode
 
