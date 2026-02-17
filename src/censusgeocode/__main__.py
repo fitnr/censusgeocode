@@ -1,4 +1,4 @@
-# Copyright (C) 2015-7 Neil Freeman
+# Copyright (c) 2015-2026, Neil Freeman <contact@fakeisthenewreal.org>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
