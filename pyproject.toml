@@ -34,6 +34,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/fitnr/censusgeocode"
+"Bug Tracker" = "https://github.com/fitnr/censusgeocode/issues"
+Repository = "https://github.com/fitnr/censusgeocode.git"
+Changelog = "https://github.com/fitnr/censusgeocode/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 test = [
