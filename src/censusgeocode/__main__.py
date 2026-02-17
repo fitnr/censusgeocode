@@ -74,7 +74,7 @@ def main():
             print("{},{}".format(result[0]["coordinates"]["x"], result[0]["coordinates"]["y"]))
 
         except IndexError:
-            print("Address not found: {}".format(args.address), file=sys.stderr)
+            print(f"Address not found: {args.address}", file=sys.stderr)
             sys.exit(1)
 
     elif args.csv:

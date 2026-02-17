@@ -113,10 +113,11 @@ class CensusGeocode:
                 if "geographies" in content.get("result", {}):
                     return GeographyResult(content)
 
-                raise ValueError()
+                raise ValueError
 
-        except (ValueError, KeyError):
-            raise ValueError("Unable to parse response from Census")
+        except (ValueError, KeyError) as e:
+            err_msg = "Unable to parse response from Census"
+            raise ValueError(err_msg) from e
 
     def coordinates(self, x: float, y: float, *, returntype: ReturnType = "geographies", **kwargs) -> list | dict:
         """Geocode a (lon, lat) coordinate."""
@@ -180,8 +181,9 @@ class CensusGeocode:
         """Parse the batch address results returned from the Census Geocoding API"""
         try:
             fieldnames = self.batchfields[returntype]
-        except KeyError as err:
-            raise ValueError("unknown returntype: {}".format(returntype)) from err
+        except KeyError as e:
+            err_msg = f"unknown returntype: {returntype}"
+            raise ValueError(err_msg) from e
 
         def parse(row):
             row["lat"], row["lon"] = None, None
@@ -213,7 +215,8 @@ class CensusGeocode:
         url = self._geturl(searchtype="addressbatch", returntype=returntype)
 
         if not data and f is None:
-            raise ValueError("Need either data or a file for CensusGeocode.addressbatch")
+            err_msg = "Need either data or a file for CensusGeocode.addressbatch"
+            raise ValueError(err_msg)
 
         if data:
             f = io.StringIO()

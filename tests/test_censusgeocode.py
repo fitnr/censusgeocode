@@ -56,9 +56,9 @@ class CensusGeoCodeTestCase(unittest.TestCase):
         assert results[0]
         try:
             assert results[0]["geographies"]["Counties"][0]["BASENAME"] == "District of Columbia"
-        except AssertionError:
-            print(results[0]["geographies"]["Counties"][0])
-            raise
+        except AssertionError as e:
+            err_msg = str(results[0]["geographies"]["Counties"][0])
+            raise AssertionError(err_msg) from e
 
         assert "Metropolitan Divisions" in results[0]["geographies"].keys()
         assert "Alaska Native Village Statistical Areas" in results[0]["geographies"].keys()
