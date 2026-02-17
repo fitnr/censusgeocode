@@ -164,7 +164,7 @@ class CensusGeocode:
     def benchmark(self) -> str:
         """Give the Census Geocoding API benchmark the class is using.
         See: https://geocoding.geo.census.gov/geocoder/benchmarks"""
-        return getattr(self, "_benchmark")
+        return self._benchmark
 
     def set_vintage(self, vintage: str) -> None:
         """Set the Census Geocoding API vintage the class will use.
@@ -175,7 +175,7 @@ class CensusGeocode:
     def vintage(self) -> str:
         """Give the Census Geocoding API vintage the class is using.
         See: https://geocoding.geo.census.gov/geocoder/vintages?form"""
-        return getattr(self, "_vintage")
+        return self._vintage
 
     def _parse_batch_result(self, data: str, returntype: ReturnType) -> list[ResultType]:
         """Parse the batch address results returned from the Census Geocoding API"""
