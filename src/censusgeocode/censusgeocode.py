@@ -306,7 +306,7 @@ class CensusGeocode:
         """
         Set the Census Geocoding API benchmark the class will use.
 
-        See https://geocoding.geo.census.gov/geocoder/vintages?form
+        See https://geocoding.geo.census.gov/geocoder/geographies/address?form
 
         Args:
             benchmark (str): The benchmark to use in future queries.
@@ -316,19 +316,14 @@ class CensusGeocode:
 
     @property
     def benchmark(self) -> str:
-        """
-        Give the Census Geocoding API benchmark the class is using.
-
-        See https://geocoding.geo.census.gov/geocoder/benchmarks
-
-        """
+        """Check what Census Geocoding API benchmark the class is using."""
         return self._benchmark
 
     def set_vintage(self, vintage: str) -> None:
         """
         Set the Census Geocoding API vintage the class will use.
 
-        See https://geocoding.geo.census.gov/geocoder/vintages?form
+        See https://geocoding.geo.census.gov/geocoder/geographies/address?form
 
         Args:
             vintage (str): The vintage to use in future queries.
@@ -338,12 +333,7 @@ class CensusGeocode:
 
     @property
     def vintage(self) -> str:
-        """
-        Give the Census Geocoding API vintage the class is using.
-
-        See https://geocoding.geo.census.gov/geocoder/vintages?form
-
-        """
+        """Check what Census Geocoding API vintage the class is using."""
         return self._vintage
 
     def _parse_batch_result(
