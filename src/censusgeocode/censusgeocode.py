@@ -29,7 +29,7 @@ SearchType = Literal[
     "onelineaddress", "address", "addressPR", "addressbatch", "coordinates"
 ]
 ReturnType = Literal["geographies", "locations"]
-ResultType = Dict[str, Union[str, int, float, list]]
+ResultType = Dict[str, Union[str, int, float, list, None]]
 
 DEFAULT_BENCHMARK = "Public_AR_Current"
 DEFAULT_VINTAGE = "Current_Current"
