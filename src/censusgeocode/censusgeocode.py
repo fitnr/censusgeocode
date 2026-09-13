@@ -268,7 +268,7 @@ class CensusGeocode:
 
     def onelineaddress(self, address: str, **kwargs) -> AddressResult | GeographyResult:
         """
-        Geocode an an address passed as one string.
+        Geocode an address passed as one string.
 
         Args:
             address (str):
