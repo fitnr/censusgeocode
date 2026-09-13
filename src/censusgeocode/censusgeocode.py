@@ -59,8 +59,8 @@ class CensusGeocode:
             CensusGeocode(benchmark="Public_AR_Current", vintage="Current_Current")
 
         """
-        self._benchmark = benchmark
-        self._vintage = vintage
+        self._benchmark = benchmark or DEFAULT_BENCHMARK
+        self._vintage = vintage or DEFAULT_VINTAGE
         self.batchfields = {
             "locations": [
                 "id",
