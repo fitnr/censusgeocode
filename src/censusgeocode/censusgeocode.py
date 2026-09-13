@@ -20,7 +20,7 @@ import io
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Dict, List, Literal, TextIO, Union
+from typing import Any, Dict, List, Literal, TextIO, Union, cast
 
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -497,8 +497,10 @@ class CensusGeocode:
             TypeError: If the data is not a file-like object, `Path`, `str`, or iterable of dictionaries.
 
         """
-        if isinstance(data, (io.IOBase, TextIO)):
-            return self._post_batch(f=data, leave_open=True, timeout=timeout, **kwargs)
+        if hasattr(data, "read"):
+            return self._post_batch(
+                f=cast("io.IOBase", data), leave_open=True, timeout=timeout, **kwargs
+            )
 
         if isinstance(data, str):
             data = Path(data)
