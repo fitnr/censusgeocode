@@ -418,8 +418,8 @@ class CensusGeocode:
                     row["lon"], row["lat"] = tuple(
                         float(a) for a in row["coordinate"].split(",")
                     )
+                del row["coordinate"]
 
-            del row["coordinate"]
             row["match"] = row["match"] == "Match"
             return row
 
