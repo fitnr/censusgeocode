@@ -20,7 +20,7 @@ import io
 import warnings
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Dict, List, Literal, TextIO, Union, cast
+from typing import Any, Dict, List, Literal, TextIO, Union, cast, overload
 
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -105,6 +105,58 @@ class CensusGeocode:
         """
         return self._url.format(returntype=returntype, searchtype=searchtype)
 
+    @overload
+    def _fetch(
+        self,
+        searchtype: Literal["coordinates"],
+        fields: Dict[
+            Literal[
+                "vintage",
+                "benchmark",
+                "layers",
+                "format",
+                "x",
+                "y",
+                "address",
+                "street",
+                "city",
+                "state",
+                "zip",
+            ],
+            str | float | None,
+        ],
+        *,
+        returntype: ReturnType = "geographies",
+        timeout: int = DEFAULT_TIMEOUT,
+        **kwargs,
+    ) -> GeographyResult: ...
+
+    @overload
+    def _fetch(
+        self,
+        searchtype: SearchType,
+        fields: Dict[
+            Literal[
+                "vintage",
+                "benchmark",
+                "layers",
+                "format",
+                "x",
+                "y",
+                "address",
+                "street",
+                "city",
+                "state",
+                "zip",
+            ],
+            str | float | None,
+        ],
+        *,
+        returntype: ReturnType,
+        timeout: int = DEFAULT_TIMEOUT,
+        **kwargs,
+    ) -> AddressResult | GeographyResult: ...
+
     def _fetch(
         self,
         searchtype: SearchType,
@@ -173,17 +225,14 @@ class CensusGeocode:
         self,
         x: float,
         y: float,
-        *,
-        returntype: ReturnType = "geographies",
         **kwargs,
-    ) -> AddressResult | GeographyResult:
+    ) -> GeographyResult:
         """
         Geocode a (lon, lat) coordinate.
 
         Args:
             x (float): The longitude coordinate.
             y (float): The latitude coordinate.
-            returntype (ReturnType): The type of response to return.
             **kwargs: Additional keyword arguments to pass to `requests.get`.
 
         Returns:
@@ -209,7 +258,7 @@ class CensusGeocode:
         ] = {"x": x, "y": y}
 
         return self._fetch(
-            "coordinates", fields=fields, returntype=returntype, **kwargs
+            "coordinates", fields=fields, returntype="geographies", **kwargs
         )
 
     def address(
