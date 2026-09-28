@@ -4,36 +4,143 @@
 # Licensed under the General Public License (version 3)
 # http://opensource.org/licenses/LGPL-3.0
 # Copyright (c) 2015-2026, Neil Freeman <contact@fakeisthenewreal.org>
-name: Publish to PyPi
+
+name: Build, test, & publish
 
 on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+      - main
   release:
-    types: [created]
+    types:
+      - created
 
 permissions: read-all
 
+env:
+  CACHE_GLOBS: |
+    **/pyproject.toml
+    **/uv.lock
+  ENDPOINT_WHITELIST: >-
+    pypi.org:443
+    github.com:443
+    releases.astral.sh:443
+    files.pythonhosted.org:443
+    *.github.com:443
+    *.githubusercontent.com:443
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
+    steps:
+      - uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: ${{ env.ENDPOINT_WHITELIST}}
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d
+        with:
+          python-version: 3.13
+          activate-environment: true
+          cache-dependency-glob: ${{ env.CACHE_GLOBS }}
+
+      - run: uv sync
+
+      - run: uv build
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: censusgeocode-dist
+          path: dist/
+
+  test:
+    needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - '3.10'
+          - '3.11'
+          - '3.12'
+          - '3.13'
+          - '3.14'
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c
+        with:
+          disable-sudo: true
+          egress-policy: audit
+          allowed-endpoints: ${{ env.ENDPOINT_WHITELIST}}
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: censusgeocode-dist
+          path: dist
+
+      - shell: bash
+        run: |
+          file=$(find ./dist -name 'censusgeocode-*.tar.gz' | head -1)
+          # Extract to a temp directory first
+          mkdir -p temp_extract
+          tar -xzf "$file" -C temp_extract
+          # Find and move requirements files to root
+          find temp_extract -name 'pyproject.toml' -exec cp {} . \; 2>/dev/null || true
+          # Clean up
+          rm -rf temp_extract
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+            python-version: ${{ matrix.python-version }}
+            cache: pip
+
+      - shell: bash
+        run: |
+          file=$(find ./dist -name 'censusgeocode-*.tar.gz' | head -1)
+          pip install "$file"
+
+  publish:
+    if: github.repository_owner == 'fitnr' && github.event_name == 'release' && github.event.action == 'created'
+    needs: test
+
+    runs-on: ubuntu-latest
+    environment: release
+
     permissions:
+      contents: read
       id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
 
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c
         with:
-          python-version: '3.13'
+          disable-sudo: true
+          egress-policy: audit
 
-      - name: Install build requirements
-        run: pip install build
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
 
-      - run: make build
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: censusgeocode-dist
+          path: dist
 
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@v1.13.0
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+          verify-metadata: true
+          skip-existing: true
+          packages-dir: dist
+          verbose: true

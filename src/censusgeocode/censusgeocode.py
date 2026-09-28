@@ -25,15 +25,14 @@ from typing import Any, Dict, List, Literal, TextIO, Union, cast, overload
 import requests
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-SearchType = Literal[
-    "onelineaddress", "address", "addressPR", "addressbatch", "coordinates"
-]
+SearchType = Literal["onelineaddress", "address", "addressPR", "addressbatch", "coordinates"]
 ReturnType = Literal["geographies", "locations"]
 ResultType = Dict[str, Union[str, int, float, list, None]]
 
 DEFAULT_BENCHMARK = "Public_AR_Current"
 DEFAULT_VINTAGE = "Current_Current"
 DEFAULT_TIMEOUT = 12
+MAX_BATCH = 10_000
 
 
 class CensusGeocode:
@@ -41,9 +40,7 @@ class CensusGeocode:
 
     _url = "https://geocoding.geo.census.gov/geocoder/{returntype}/{searchtype}"
 
-    def __init__(
-        self, benchmark: str = DEFAULT_BENCHMARK, vintage: str = DEFAULT_VINTAGE
-    ) -> None:
+    def __init__(self, benchmark: str = DEFAULT_BENCHMARK, vintage: str = DEFAULT_VINTAGE) -> None:
         """
         Initialize a CensusGeocode instance.
 
@@ -88,9 +85,7 @@ class CensusGeocode:
             ],
         }
 
-    def _geturl(
-        self, searchtype: SearchType, returntype: ReturnType = "geographies"
-    ) -> str:
+    def _geturl(self, searchtype: SearchType, returntype: ReturnType = "geographies") -> str:
         """
         Construct an URL for the geocoder.
 
@@ -257,9 +252,7 @@ class CensusGeocode:
             str | float | None,
         ] = {"x": x, "y": y}
 
-        return self._fetch(
-            "coordinates", fields=fields, returntype="geographies", **kwargs
-        )
+        return self._fetch("coordinates", fields=fields, returntype="geographies", **kwargs)
 
     def address(
         self,
@@ -311,9 +304,7 @@ class CensusGeocode:
             "zip": zip or zipcode,
         }
 
-        return self._fetch(
-            searchtype="address", fields=fields, timeout=timeout, **kwargs
-        )
+        return self._fetch(searchtype="address", fields=fields, timeout=timeout, **kwargs)
 
     def onelineaddress(self, address: str, **kwargs) -> AddressResult | GeographyResult:
         """
@@ -385,9 +376,7 @@ class CensusGeocode:
         """Check what Census Geocoding API vintage the class is using."""
         return self._vintage
 
-    def _parse_batch_result(
-        self, data: str, returntype: ReturnType
-    ) -> List[ResultType]:
+    def _parse_batch_result(self, data: str, returntype: ReturnType) -> List[ResultType]:
         """
         Parse the batch address results returned from the Census Geocoding API.
 
@@ -415,9 +404,7 @@ class CensusGeocode:
 
             if row["coordinate"]:
                 with contextlib.suppress(ValueError):
-                    row["lon"], row["lat"] = tuple(
-                        float(a) for a in row["coordinate"].split(",")
-                    )
+                    row["lon"], row["lat"] = tuple(float(a) for a in row["coordinate"].split(","))
                 del row["coordinate"]
 
             row["match"] = row["match"] == "Match"
@@ -467,17 +454,13 @@ class CensusGeocode:
 
         if data:
             f = io.StringIO()
-            writer = csv.DictWriter(
-                f, fieldnames=["id", "street", "city", "state", "zip"]
-            )
+            writer = csv.DictWriter(f, fieldnames=["id", "street", "city", "state", "zip"])
             for i, row in enumerate(data, 1):
                 row.setdefault("id", i)
                 writer.writerow(row)
-                if i == 10001:
-                    warnings.warn(
-                        "Sending more than 10,000 records, the upper limit for the Census Geocoder. Request will likely fail.",
-                        stacklevel=2,
-                    )
+                if i == MAX_BATCH + 1:
+                    warn_msg = f"Sending more than {format(MAX_BATCH, ',')} records, the upper limit for the Census Geocoder. Request will likely fail."
+                    warnings.warn(warn_msg, stacklevel=2)
 
             f.seek(0)
 
@@ -491,9 +474,7 @@ class CensusGeocode:
             )
             headers = {"Content-Type": form.content_type}
 
-            with requests.post(
-                url, data=form, timeout=timeout, headers=headers, **kwargs
-            ) as r:
+            with requests.post(url, data=form, timeout=timeout, headers=headers, **kwargs) as r:
                 # return as list of dicts
                 return self._parse_batch_result(r.text, returntype)
 
@@ -537,9 +518,7 @@ class CensusGeocode:
 
         """
         if hasattr(data, "read"):
-            return self._post_batch(
-                f=cast("io.IOBase", data), leave_open=True, timeout=timeout, **kwargs
-            )
+            return self._post_batch(f=cast("io.IOBase", data), leave_open=True, timeout=timeout, **kwargs)
 
         if isinstance(data, str):
             data = Path(data)
@@ -549,14 +528,10 @@ class CensusGeocode:
                 err_msg = f"File not found at path {data}"
                 raise FileNotFoundError(err_msg)
             with data.open("rb") as data_file:
-                return self._post_batch(
-                    f=data_file, leave_open=True, timeout=timeout, **kwargs
-                )
+                return self._post_batch(f=data_file, leave_open=True, timeout=timeout, **kwargs)
 
         if isinstance(data, Iterable):
-            return self._post_batch(
-                data=data, leave_open=False, timeout=timeout, **kwargs
-            )
+            return self._post_batch(data=data, leave_open=False, timeout=timeout, **kwargs)
 
         err_msg = f"Expected a file-like object, a path object or string, or a list of dicts; got {type(data).__name__}"
         raise TypeError(err_msg)
