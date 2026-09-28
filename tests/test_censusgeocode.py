@@ -127,7 +127,7 @@ def test_addressbatch(cg: CensusGeocode, batch_input: Union[str, Path]) -> None:
 
 @vcr.use_cassette("tests/fixtures/address-batch.yaml")
 def test_addressbatch_file_stream(cg: CensusGeocode) -> None:
-    """addressbatch() method works with file streams, closing them correctly."""
+    """addressbatch() method works with file streams, and leaves them open."""
     f = Path("tests/fixtures/batch.csv").open("rb")
     result = cg.addressbatch(f, returntype="locations")
     assert isinstance(result, list)
