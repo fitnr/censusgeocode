@@ -1,3 +1,18 @@
+0.6.0
+-----
+* Drop support for python 3.6 and 3.7
+* Move testing and linting development dependencies to dependency groups instead of extras
+* Move maximum batch size to MAX_BATCH constant in censusgeocode.py
+* Add full static type hinting to all functions and methods
+* Use DEFAULT_TIMEOUT from censusgeocode.py as default timeout in command line interface
+* Improve level of detail in CensusGeocode methods
+* Allow passing kwargs from coordinates, address, and onelineaddress methods of CensusGeocode to requests.get
+* Allow passing kwargs from addressbatch method of CensusGeocode to requests.post
+* Allow addressbatch method's data argument to be a Path object
+* Raise FileNotFoundError if addressbatch method is provided with path to data file that does not exist
+* Raise TypeError if addressbatch method is provided with incorrect data argument type
+* [BREAKING -- low severity] Leave file-like objects open if provided to addressbatch method
+
 0.5.3
 -----
 * Remove upper version limits on requests-toolbelt, requests, and vcrpy (used only for testing)
